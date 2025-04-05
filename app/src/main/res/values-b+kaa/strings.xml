@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Tic Tac Toe</string>
+    <string name="play_with_friend">Dos penen oynaw</string>
+    <string name="play_with_robot">Robot penen oynaw</string>
+    <string name="play_infinite_move">Sheksiz háreket etiw</string>
+    <string name="player_x_name">Oyınshı atı X</string>
+    <string name="player_o_name">Oyınshı atı O</string>
+    <string name="level_easy">Ańsat</string>
+    <string name="level_hard">Qıyın</string>
+    <string name="start_game">Oyındı baslaw</string>
+    <string name="change_language">Tildi ózgertiw</string>
+</resources>

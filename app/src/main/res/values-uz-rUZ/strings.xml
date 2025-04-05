@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Tic Tac Toe</string>
+    <string name="play_with_friend">Robot bilan o\'ynash</string>
+    <string name="play_with_robot">Do\'st bilan o\'ynash</string>
+    <string name="play_infinite_move">Cheksiz yurish</string>
+    <string name="player_x_name">"X o‘yinchi nomi "</string>
+    <string name="player_o_name">"O o‘yinchi nomi "</string>
+    <string name="level_easy">Oson</string>
+    <string name="level_hard">Qiyin</string>
+    <string name="start_game">O‘yinni boshlash</string>
+    <string name="change_language">Tilni o‘zgartirish</string>
+</resources>

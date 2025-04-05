@@ -1,15 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Tic Tac Toe</string>
     <string name="play_with_friend">Play with friend</string>
     <string name="play_with_robot">Play with robot</string>
     <string name="play_infinite_move">Play infinite move</string>
-    <string name="player_x_name">Player X name</string>
-    <string name="player_o_name">Player O name</string>
+    <string name="player_x_name">Player Name \"X\"</string>
+    <string name="player_o_name">Player Name \"O\"</string>
     <string name="level_easy">Easy</string>
     <string name="level_hard">Hard</string>
     <string name="start_game">Start the game</string>
     <string name="change_language">Change language</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <!-- TODO: Remove or change this placeholder text -->
 </resources>

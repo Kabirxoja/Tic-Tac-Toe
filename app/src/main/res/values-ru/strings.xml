@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Tic Tac Toe</string>
+    <string name="play_with_friend">Играть с другом</string>
+    <string name="play_with_robot">Играть с роботом</string>
+    <string name="play_infinite_move">Играть в бесконечный ход</string>
+    <string name="player_x_name">Имя игрока \"X\"</string>
+    <string name="player_o_name">Имя игрока \"O\"</string>
+    <string name="level_easy">Легкий</string>
+    <string name="level_hard">Сложно</string>
+    <string name="start_game">Начать игру</string>
+    <string name="change_language">Изменить язык</string>
+</resources>
