@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#333333</color>
+    <color name="white">#FFFFFFFF</color>
+
+
+    <color name="winBackground">#FAFF77</color>  <!-- Yellow for winning line -->
+    <color name="defaultBackground">#FFFFFF</color>  <!-- White for default -->
+</resources>

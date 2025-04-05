@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:background="@drawable/ic_background_main_3"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context=".AIFragment">
+
+
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="4dp">
+
+        <RelativeLayout
+            android:id="@+id/left_side"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bac_curve"
+            android:layout_alignParentStart="true">
+
+            <TextView
+                android:id="@+id/user_name"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:text="Robot"
+                android:textColor="@color/white"
+                android:textSize="24sp"
+                android:gravity="center"
+                android:textAllCaps="true"
+                android:layout_centerHorizontal="true"
+                android:maxLines="1"
+                android:ellipsize="end"
+
+                />
+
+            <RelativeLayout
+                android:id="@+id/image_container"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/user_name"
+                android:layout_centerHorizontal="true"
+                android:gravity="center_horizontal"
+                android:paddingEnd="10dp"
+                android:paddingBottom="6dp"
+                >
+
+                <ImageView
+                    android:layout_width="68dp"
+                    android:layout_height="68dp"
+                    android:background="@drawable/bac_cycle"
+                    />
+
+                <ImageButton
+                    android:id="@+id/user_image"
+                    android:layout_width="68dp"
+                    android:layout_height="68dp"
+                    android:background="@drawable/ic_character_robot"
+                    />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/image_container"
+                android:layout_alignBottom="@+id/image_container">
+
+                <ImageView
+                    android:id="@+id/type_image"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:background="@drawable/bac_curve"
+                    android:backgroundTint="@color/white"
+                    />
+
+                <ImageView
+                    android:id="@+id/indicator_user_1"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:padding="4dp"
+                    android:src="@drawable/ic_main_o"
+                    />
+
+            </RelativeLayout>
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/animation_view1"
+                android:layout_width="80dp"
+                android:layout_height="40dp"
+                android:layout_below="@id/image_container"
+                android:rotation="180"
+                android:visibility="invisible"
+                app:lottie_autoPlay="true"
+                app:lottie_fileName="json_anim_pointer.json"
+                app:lottie_loop="true"
+                app:lottie_speed="1.0"
+                android:layout_centerHorizontal="true"
+                />
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/score_table"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="12dp"
+            android:text="0:0"
+            android:textColor="@color/white"
+            android:textSize="52sp"
+            android:textStyle="bold"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            />
+
+        <RelativeLayout
+            android:id="@+id/right_side"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bac_curve"
+            android:layout_alignParentEnd="true">
+
+            <TextView
+                android:id="@+id/user_name_2"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:text="Player 2"
+                android:textColor="@color/white"
+                android:textSize="24sp"
+                android:gravity="center"
+                android:textAllCaps="true"
+                android:layout_centerHorizontal="true"
+                android:maxLines="1"
+                android:ellipsize="end"
+
+                />
+
+            <LinearLayout
+                android:id="@+id/image_container_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/user_name_2"
+                android:layout_centerHorizontal="true"
+                android:gravity="center_horizontal"
+                android:paddingEnd="10dp"
+                android:paddingBottom="6dp"
+                >
+
+                <ImageButton
+                    android:id="@+id/user_image_2"
+                    android:layout_width="68dp"
+                    android:layout_height="68dp"
+                    android:background="@drawable/ic_character_man_3"
+                    />
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/image_container_2"
+                android:layout_alignBottom="@+id/image_container_2">
+
+                <ImageView
+                    android:id="@+id/type_image_2"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:background="@drawable/bac_curve"
+                    android:backgroundTint="@color/white"
+                    />
+
+                <ImageView
+                    android:id="@+id/indicator_user_2"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:padding="6dp"
+                    android:src="@drawable/ic_main_x"
+                    />
+
+            </RelativeLayout>
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/animation_view2"
+                android:layout_width="80dp"
+                android:layout_height="40dp"
+                android:layout_below="@id/image_container_2"
+                android:rotation="180"
+                android:visibility="visible"
+                app:lottie_autoPlay="true"
+                app:lottie_fileName="json_anim_pointer.json"
+                app:lottie_loop="true"
+                app:lottie_speed="1.0"
+                android:layout_centerHorizontal="true"
+                />
+
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bac_curve"
+        android:backgroundTint="#AE89F0"
+        android:padding="10dp"
+
+        >
+
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:columnCount="3"
+            android:rowCount="3"
+
+
+            >
+
+            <ImageButton
+                android:id="@+id/button00"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center"
+                android:layout_margin="4dp"
+                android:background="@drawable/bac_curve"
+                android:backgroundTint="@color/white"
+                android:padding="8dp"
+                android:scaleType="centerInside" />
+
+            <ImageButton
+                android:id="@+id/button01"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_margin="4dp"
+                android:background="@drawable/bac_curve"
+                android:backgroundTint="@color/white"
+                android:padding="8dp"
+                android:scaleType="centerInside" />
+
+            <ImageButton
+                android:id="@+id/button02"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_margin="4dp"
+                android:background="@drawable/bac_curve"
+                android:backgroundTint="@color/white"
+                android:padding="8dp"
+                android:scaleType="centerInside" />
+
+            <ImageButton
+                android:id="@+id/button10"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_margin="4dp"
+                android:background="@drawable/bac_curve"
+                android:backgroundTint="@color/white"
+                android:padding="8dp"
+                android:scaleType="centerInside"
+
+                />
+
+            <ImageButton
+                android:id="@+id/button11"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_margin="4dp"
+                android:background="@drawable/bac_curve"
+                android:backgroundTint="@color/white"
+                android:padding="8dp"
+                android:scaleType="centerInside" />
+
+            <ImageButton
+                android:id="@+id/button12"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_margin="4dp"
+                android:background="@drawable/bac_curve"
+                android:backgroundTint="@color/white"
+                android:padding="8dp"
+                android:scaleType="centerInside" />
+
+            <ImageButton
+                android:id="@+id/button20"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_margin="4dp"
+                android:background="@drawable/bac_curve"
+                android:backgroundTint="@color/white"
+                android:padding="8dp"
+                android:scaleType="centerInside" />
+
+            <ImageButton
+                android:id="@+id/button21"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_margin="4dp"
+                android:background="@drawable/bac_curve"
+                android:backgroundTint="@color/white"
+                android:padding="8dp"
+                android:scaleType="centerInside" />
+
+            <ImageButton
+                android:id="@+id/button22"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_margin="4dp"
+                android:background="@drawable/bac_curve"
+                android:backgroundTint="@color/white"
+                android:padding="8dp"
+                android:scaleType="centerInside" />
+
+        </GridLayout>
+
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/statusText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Player X's Turn"
+        android:textSize="14sp"
+        android:layout_marginTop="4dp"
+
+        />
+
+    <LinearLayout
+        android:id="@+id/resetButton"
+        android:layout_width="200dp"
+        android:layout_height="52dp"
+        android:layout_marginTop="18dp"
+        android:background="@drawable/bac_curve"
+        android:backgroundTint="@color/white"
+        android:gravity="center"
+
+        >
+
+        <ImageView
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:layout_gravity="center"
+            android:contentDescription="Reset Game"
+            android:src="@drawable/reload"
+
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="  Replay"
+            android:textSize="24sp"
+            android:textColor="@color/black"
+
+            />
+
+
+    </LinearLayout>
+
+
+</LinearLayout>

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/ic_background_main_2"
+    android:gravity="center"
+    android:orientation="vertical"
+    tools:context=".MainFragment"
+
+    >
+
+
+    <LinearLayout
+        android:id="@+id/btn_one_player"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="18dp"
+        android:background="@drawable/bac_curve"
+        android:backgroundTint="@color/white"
+        android:gravity="start|center_vertical"
+        android:orientation="vertical"
+        android:paddingVertical="18dp"
+
+        >
+
+        <ImageView
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="12dp"
+            android:contentDescription="Reset Game"
+            android:src="@drawable/img_robot"
+
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="1 player game"
+            android:textSize="24sp"
+            android:textColor="@color/black"
+
+            />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/btn_two_player"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="18dp"
+        android:background="@drawable/bac_curve"
+        android:backgroundTint="@color/white"
+        android:gravity="start|center_vertical"
+        android:orientation="vertical"
+        android:paddingVertical="18dp"
+
+        >
+
+        <ImageView
+            android:layout_width="72dp"
+
+            android:layout_height="72dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="12dp"
+            android:contentDescription="Reset Game"
+            android:src="@drawable/img_classic"
+
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="2 player game"
+            android:textSize="24sp"
+            android:textColor="@color/black"
+
+            />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/btn_puzzle"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="18dp"
+        android:background="@drawable/bac_curve"
+        android:backgroundTint="@color/white"
+        android:gravity="start|center_vertical"
+        android:orientation="vertical"
+        android:paddingVertical="18dp"
+
+        >
+
+        <ImageView
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="12dp"
+            android:contentDescription="Reset Game"
+            android:src="@drawable/img_infinite"
+
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Puzzle 15"
+            android:textSize="24sp"
+            android:textColor="@color/black"
+
+            />
+
+
+    </LinearLayout>
+
+
+</LinearLayout>

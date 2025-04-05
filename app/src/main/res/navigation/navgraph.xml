@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navgraph"
+    app:startDestination="@id/mainFragment">
+
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="uz.kabir.pastimegame.MainFragment"
+        android:label="fragment_main"
+        tools:layout="@layout/fragment_main" >
+        <action
+            android:id="@+id/action_mainFragment_to_ticTacToePairFragment"
+            app:destination="@id/ticTacToePairFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_ticTacToeAIFragment"
+            app:destination="@id/ticTacToeAIFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_ticTacToeRandomFragment"
+            app:destination="@id/ticTacToeRandomFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_boltFragment"
+            app:destination="@id/boltFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/ticTacToePairFragment"
+        android:name="uz.kabir.pastimegame.PairFragment"
+        android:label="fragment_tic_tac_toe_pair"
+        tools:layout="@layout/fragment_tic_tac_toe_pair" />
+    <fragment
+        android:id="@+id/ticTacToeAIFragment"
+        android:name="uz.kabir.pastimegame.AIFragment"
+        android:label="fragment_tic_tac_toe_a_i"
+        tools:layout="@layout/fragment_tic_tac_toe_a_i" />
+    <fragment
+        android:id="@+id/ticTacToeRandomFragment"
+        android:name="uz.kabir.pastimegame.RandomFragment"
+        android:label="fragment_tic_tac_toe_random"
+        tools:layout="@layout/fragment_tic_tac_toe_random" />
+    <fragment
+        android:id="@+id/boltFragment"
+        android:name="uz.kabir.pastimegame.BoltFragment"
+        android:label="fragment_blot"
+        tools:layout="@layout/fragment_blot" />
+</navigation>
