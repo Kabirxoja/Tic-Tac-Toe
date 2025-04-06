@@ -11,4 +11,11 @@
     <string name="start_game">Начать игру</string>
     <string name="change_language">Изменить язык</string>
     <string name="replay_game">Повторить</string>
+    <string name="you_win">Ты выиграл!</string>
+    <string name="robot_win">Робот выиграл!</string>
+    <string name="draw">Ничья</string>
+    <string name="x_turn">Ход игрока X</string>
+    <string name="o_turn">Ход игрока O</string>
+    <string name="x_player_won">Игрок X выиграл!</string>
+    <string name="o_player_won">Игрок O выиграл!</string>
 </resources>

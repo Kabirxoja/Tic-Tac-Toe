@@ -14,6 +14,7 @@ import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import uz.kabir.pastimegame.AnimationButton.animateClick
 import uz.kabir.pastimegame.databinding.FragmentTicTacToeAIBinding
 
 
@@ -64,13 +65,23 @@ class AIFragment : Fragment() {
         statusText = binding.root.findViewById(R.id.statusText)
 
         restartButton = binding.root.findViewById(R.id.resetButton)
-        restartButton.setOnClickListener { resetGame() }
+        restartButton.setOnClickListener {
+            binding.resetButton.animateClick()
+            resetGame()
+        }
 
         buttons = Array(3) { row ->
             Array(3) { col ->
-                val buttonID = resources.getIdentifier("button${row}${col}", "id", binding.root.context.packageName)
+                val buttonID = resources.getIdentifier(
+                    "button${row}${col}",
+                    "id",
+                    binding.root.context.packageName
+                )
                 binding.root.findViewById<ImageButton>(buttonID).apply {
-                    setOnClickListener { makeMove(row, col) }
+                    setOnClickListener {
+                        it.animateClick(40)
+                        makeMove(row, col)
+                    }
                 }
             }
         }
@@ -93,16 +104,21 @@ class AIFragment : Fragment() {
 
         val winPositions = getWinningPositions('X')
         if (winPositions != null) {
-            statusText.text = "You Win!"
+            statusText.text = resources.getString(R.string.you_win)
             countWinnerX++
             highlightWinningButtons(winPositions)
-            binding.indicatorUser2.setImageDrawable(ContextCompat.getDrawable(binding.root.context, R.drawable.ic_winner))
+            binding.indicatorUser2.setImageDrawable(
+                ContextCompat.getDrawable(
+                    binding.root.context,
+                    R.drawable.ic_winner
+                )
+            )
             disableButtons()
             return
         }
 
         if (isBoardFull()) {
-            statusText.text = "Draw!"
+            statusText.text = resources.getString(R.string.draw)
             return
         }
 
@@ -122,16 +138,21 @@ class AIFragment : Fragment() {
 
         val winPositions = getWinningPositions('O')
         if (winPositions != null) {
-            statusText.text = "AI Wins!"
+            statusText.text = resources.getString(R.string.robot_win)
             countWinnerO++
             highlightWinningButtons(winPositions)
-            binding.indicatorUser1.setImageDrawable(ContextCompat.getDrawable(binding.root.context, R.drawable.ic_winner))
+            binding.indicatorUser1.setImageDrawable(
+                ContextCompat.getDrawable(
+                    binding.root.context,
+                    R.drawable.ic_winner
+                )
+            )
             disableButtons()
             return
         }
 
         if (isBoardFull()) {
-            statusText.text = "Draw!"
+            statusText.text = resources.getString(R.string.draw)
             return
         }
 
@@ -176,7 +197,8 @@ class AIFragment : Fragment() {
                     board[i][j] = if (isMaximizing) 'O' else 'X'
                     val score = minimax(!isMaximizing)
                     board[i][j] = ' '
-                    bestScore = if (isMaximizing) maxOf(score, bestScore) else minOf(score, bestScore)
+                    bestScore =
+                        if (isMaximizing) maxOf(score, bestScore) else minOf(score, bestScore)
                 }
             }
         }
@@ -230,8 +252,18 @@ class AIFragment : Fragment() {
         statusText.text = ""
         isXTurn = true
 
-        binding.indicatorUser1.setImageDrawable(ContextCompat.getDrawable(binding.root.context, R.drawable.ic_main_o))
-        binding.indicatorUser2.setImageDrawable(ContextCompat.getDrawable(binding.root.context, R.drawable.ic_main_x))
+        binding.indicatorUser1.setImageDrawable(
+            ContextCompat.getDrawable(
+                binding.root.context,
+                R.drawable.ic_main_o
+            )
+        )
+        binding.indicatorUser2.setImageDrawable(
+            ContextCompat.getDrawable(
+                binding.root.context,
+                R.drawable.ic_main_x
+            )
+        )
 
         for (i in 0..2) {
             for (j in 0..2) {
@@ -242,6 +274,7 @@ class AIFragment : Fragment() {
         }
 
         updateScoreDisplay()
+
     }
 
     private fun updateScoreDisplay() {

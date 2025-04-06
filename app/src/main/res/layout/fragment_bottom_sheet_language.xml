@@ -5,10 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp"
     tools:context=".BottomSheetLanguage"
-    android:background="@drawable/ic_background_main_3"
-
 
     >
 
@@ -17,8 +14,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:columnCount="3"
-        android:background="@color/black"
         tools:listitem="@layout/recycle_item_layout"
+        android:layout_marginBottom="20dp"
 
         >
 

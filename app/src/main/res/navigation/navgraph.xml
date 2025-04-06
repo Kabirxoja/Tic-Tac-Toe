@@ -40,7 +40,7 @@
         tools:layout="@layout/fragment_tic_tac_toe_random" />
     <fragment
         android:id="@+id/boltFragment"
-        android:name="uz.kabir.pastimegame.BoltFragment"
+        android:name="uz.kabir.pastimegame.InfiniteFragment"
         android:label="fragment_blot"
         tools:layout="@layout/fragment_blot" />
 </navigation>

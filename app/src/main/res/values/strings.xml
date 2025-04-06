@@ -10,4 +10,11 @@
     <string name="start_game">Start the game</string>
     <string name="change_language">Change language</string>
     <string name="replay_game">Replay</string>
+    <string name="you_win">You won!</string>
+    <string name="robot_win">Robot won!</string>
+    <string name="draw">Draw</string>
+    <string name="x_turn">Player X turn</string>
+    <string name="o_turn">Player O\'s turn</string>
+    <string name="x_player_won">Player X won!</string>
+    <string name="o_player_won">Player O won!</string>
 </resources>

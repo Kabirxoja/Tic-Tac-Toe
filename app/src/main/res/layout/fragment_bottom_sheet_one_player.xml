@@ -1,7 +1,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/ic_background_main_4"
+    android:background="@drawable/ic_background_main_1"
     android:orientation="vertical"
     android:padding="16dp"
 
@@ -134,7 +134,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:background="@drawable/bac_curve"
-        android:backgroundTint="#85E289"
+        android:backgroundTint="@color/blue_light"
         android:orientation="vertical"
         android:padding="12dp"
 
@@ -163,7 +163,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:hint="@string/player_x_name"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                android:textColorHint="@color/white_faded"
+                />
         </LinearLayout>
 
 
@@ -184,6 +186,7 @@
                 android:text="@string/level_easy"
                 android:textColor="@color/black"
                 android:textSize="18sp"
+                android:textAllCaps="false"
 
                 />
 
@@ -197,6 +200,7 @@
                 android:text="@string/level_hard"
                 android:textColor="@color/black"
                 android:textSize="18sp"
+                android:textAllCaps="false"
 
                 />
         </LinearLayout>
@@ -214,6 +218,7 @@
         android:text="@string/start_game"
         android:textColor="@color/black"
         android:textSize="18sp"
+        android:textAllCaps="false"
 
         />
 

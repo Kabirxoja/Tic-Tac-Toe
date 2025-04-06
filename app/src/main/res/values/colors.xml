@@ -2,8 +2,11 @@
 <resources>
     <color name="black">#333333</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="white_faded">#7EFFFFFF</color>
+    <color name="winBackground">#FAFF77</color>
+    <color name="defaultBackground">#FFFFFF</color>
+    <color name="purple_light">#C4A3FF</color>
+    <color name="blue_light">#70D3FE</color>
+    <color name="green_light">#85E289</color>
 
-
-    <color name="winBackground">#FAFF77</color>  <!-- Yellow for winning line -->
-    <color name="defaultBackground">#FFFFFF</color>  <!-- White for default -->
 </resources>

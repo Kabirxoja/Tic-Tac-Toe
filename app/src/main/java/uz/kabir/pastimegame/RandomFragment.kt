@@ -1,6 +1,7 @@
 package uz.kabir.pastimegame
 
 import android.graphics.drawable.Drawable
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -12,8 +13,9 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import uz.kabir.pastimegame.AnimationButton.animateClick
 import uz.kabir.pastimegame.databinding.FragmentTicTacToeRandomBinding
-import java.util.*
+import java.util.Random
 
 class RandomFragment : Fragment() {
 
@@ -52,9 +54,13 @@ class RandomFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentTicTacToeRandomBinding.inflate(inflater, container, false)
-        val root = binding.root
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         // Receive data from Bundle
         arguments?.let {
@@ -64,25 +70,27 @@ class RandomFragment : Fragment() {
         binding.userName2.text = user1Name
         binding.userImage2.setBackgroundResource(userImages[user1ImageIndex])
 
-        statusText = binding.root.findViewById(R.id.statusText)
-        restartButton = binding.root.findViewById(R.id.resetButton)
-        restartButton.setOnClickListener { resetGame() }
+        statusText = binding.statusText
+        restartButton = binding.resetButton
+        restartButton.setOnClickListener {
+            binding.resetButton.animateClick()
+            resetGame()
+        }
 
         buttons = Array(3) { row ->
             Array(3) { col ->
-                val buttonID = resources.getIdentifier(
-                    "button${row}${col}",
-                    "id",
-                    binding.root.context.packageName
-                )
+                val buttonID = resources.getIdentifier("button${row}${col}", "id", binding.root.context.packageName)
                 binding.root.findViewById<ImageButton>(buttonID).apply {
-                    setOnClickListener { makeMove(row, col) }
+                    setOnClickListener {
+                        it.animateClick(40)
+                        makeMove(row, col)
+                    }
                 }
             }
         }
 
-        xDrawable = ContextCompat.getDrawable(binding.root.context, R.drawable.ic_main_x)!!
-        oDrawable = ContextCompat.getDrawable(binding.root.context, R.drawable.ic_main_o)!!
+        xDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.ic_main_x)!!
+        oDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.ic_main_o)!!
 
         // Randomly choose the starting player
         val random = Random()
@@ -94,23 +102,22 @@ class RandomFragment : Fragment() {
             binding.animationView2.visibility = View.INVISIBLE
             aiIsMoving = true
             Handler(Looper.getMainLooper()).postDelayed({
-                aiRandomMove()
-                currentPlayer = 'X'
-                aiIsMoving = false
+                if (_binding != null) {
+                    aiRandomMove()
+                    currentPlayer = 'X'
+                    aiIsMoving = false
+                    binding.animationView1.visibility = View.INVISIBLE
+                    binding.animationView2.visibility = View.VISIBLE
+                }
             }, 1000)
-        }
-        else
-        {
+        } else {
             binding.animationView2.visibility = View.VISIBLE
             binding.animationView1.visibility = View.INVISIBLE
         }
-
-
-        return root
     }
 
     private fun makeMove(row: Int, col: Int) {
-        if (aiIsMoving) return
+        if (aiIsMoving || _binding == null) return
         if (board[row][col] != ' ') {
             return
         }
@@ -121,19 +128,19 @@ class RandomFragment : Fragment() {
         if (checkWin(currentPlayer)) {
             if (currentPlayer == 'X') {
                 countWinnerX++
-                statusText.text = "You Win!"
+                statusText.text = getString(R.string.you_win)
                 binding.indicatorUser2.setImageDrawable(
                     ContextCompat.getDrawable(
-                        binding.root.context,
+                        requireContext(),
                         R.drawable.ic_winner
                     )
                 )
             } else {
                 countWinnerO++
-                statusText.text = "AI Wins!"
+                statusText.text = getString(R.string.robot_win)
                 binding.indicatorUser1.setImageDrawable(
                     ContextCompat.getDrawable(
-                        binding.root.context,
+                        requireContext(),
                         R.drawable.ic_winner
                     )
                 )
@@ -145,7 +152,7 @@ class RandomFragment : Fragment() {
         }
 
         if (isBoardFull()) {
-            statusText.text = "Draw!"
+            statusText.text = getString(R.string.draw)
             updateScoreDisplay()
             return
         }
@@ -158,11 +165,13 @@ class RandomFragment : Fragment() {
             binding.animationView2.visibility = View.INVISIBLE
 
             Handler(Looper.getMainLooper()).postDelayed({
-                aiRandomMove()
-                currentPlayer = 'X'
-                aiIsMoving = false
-                binding.animationView1.visibility = View.INVISIBLE
-                binding.animationView2.visibility = View.VISIBLE
+                if (_binding != null) {
+                    aiRandomMove()
+                    currentPlayer = 'X'
+                    aiIsMoving = false
+                    binding.animationView1.visibility = View.INVISIBLE
+                    binding.animationView2.visibility = View.VISIBLE
+                }
             }, 1000)
         } else {
             binding.animationView2.visibility = View.INVISIBLE
@@ -171,6 +180,10 @@ class RandomFragment : Fragment() {
     }
 
     private fun aiRandomMove() {
+        if (_binding == null) {
+            return // Fragment's view has been destroyed, so do nothing
+        }
+
         val emptyCells = mutableListOf<Pair<Int, Int>>()
         for (i in 0..2) {
             for (j in 0..2) {
@@ -187,22 +200,25 @@ class RandomFragment : Fragment() {
             buttons[move.first][move.second]?.setImageDrawable(oDrawable)
 
             if (checkWin('O')) {
-                statusText.text = "AI Wins!"
+                statusText.text = getString(R.string.robot_win)
                 countWinnerO++
                 highlightWinningLine()
                 disableButtons()
             } else if (isBoardFull()) {
-                statusText.text = "Draw!"
+                statusText.text = getString(R.string.draw)
                 updateScoreDisplay()
             }
         }
 
-        if (currentPlayer == 'O') {
-            binding.animationView1.visibility = View.VISIBLE
-            binding.animationView2.visibility = View.INVISIBLE
-        } else {
-            binding.animationView2.visibility = View.VISIBLE
-            binding.animationView1.visibility = View.INVISIBLE
+        // Check binding again before accessing views
+        if (_binding != null) {
+            if (currentPlayer == 'O') {
+                binding.animationView1.visibility = View.VISIBLE
+                binding.animationView2.visibility = View.INVISIBLE
+            } else {
+                binding.animationView2.visibility = View.VISIBLE
+                binding.animationView1.visibility = View.INVISIBLE
+            }
         }
     }
 
@@ -264,9 +280,13 @@ class RandomFragment : Fragment() {
         if (currentPlayer == 'O') {
             aiIsMoving = true
             Handler(Looper.getMainLooper()).postDelayed({
-                aiRandomMove()
-                currentPlayer = 'X'
-                aiIsMoving = false
+                if (_binding != null) {
+                    aiRandomMove()
+                    currentPlayer = 'X'
+                    aiIsMoving = false
+                    binding.animationView1.visibility = View.INVISIBLE
+                    binding.animationView2.visibility = View.VISIBLE
+                }
             }, 1000)
         }
         if (currentPlayer == 'O') {
@@ -279,20 +299,21 @@ class RandomFragment : Fragment() {
         for (i in 0..2) {
             for (j in 0..2) {
                 buttons[i][j]?.setImageDrawable(null)
-                buttons[i][j]?.backgroundTintList = ContextCompat.getColorStateList(binding.root.context, R.color.defaultBackground)
+                buttons[i][j]?.backgroundTintList =
+                    ContextCompat.getColorStateList(requireContext(), R.color.defaultBackground)
                 buttons[i][j]?.isEnabled = true
             }
         }
 
         binding.indicatorUser1.setImageDrawable(
             ContextCompat.getDrawable(
-                binding.root.context,
+                requireContext(),
                 R.drawable.ic_main_o
             )
         )
         binding.indicatorUser2.setImageDrawable(
             ContextCompat.getDrawable(
-                binding.root.context,
+                requireContext(),
                 R.drawable.ic_main_x
             )
         )
@@ -307,7 +328,9 @@ class RandomFragment : Fragment() {
     }
 
     private fun highlightWinningLine() {
-        for (button in winningButtons) { button.backgroundTintList = ContextCompat.getColorStateList(binding.root.context, R.color.winBackground)
+        for (button in winningButtons) {
+            button.backgroundTintList =
+                ContextCompat.getColorStateList(requireContext(), R.color.winBackground)
         }
     }
 

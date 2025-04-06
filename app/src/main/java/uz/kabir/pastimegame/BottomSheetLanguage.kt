@@ -49,29 +49,34 @@ class BottomSheetLanguage : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        languageAdapter = LanguageAdapter(languageDataList)
+        val savedSelectedLanguageCode = getSavedSelectedLanguageCode(requireContext())
+
+        languageAdapter = LanguageAdapter(languageDataList, savedSelectedLanguageCode) // Pass the saved code
         binding.recyclerView.adapter = languageAdapter
         binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 3)
 
-        languageAdapter.setOnClickListener {
-            selectedLanguageCode = it.iconCode
+        languageAdapter.setOnClickListener { item ->
+            selectedLanguageCode = item.iconCode
             selectedLanguageCode?.let { code ->
-                saveLanguage(requireContext(), code)
+                saveLanguage(requireContext(), code) // Save the icon code as well
                 updateAppLocale(requireContext(), code)
-                Toast.makeText(binding.root.context, "Language Updated", Toast.LENGTH_SHORT).show()
-                requireActivity().recreate() // Recreate the activity to apply the new locale
+                requireActivity().recreate()
                 dismiss()
             } ?: run {
                 Toast.makeText(requireContext(), "Please select a language", Toast.LENGTH_SHORT).show()
             }
         }
-
-
     }
 
     private fun saveLanguage(context: Context, languageCode: String) {
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
         sharedPreferences.edit().putString(PREF_LANGUAGE_KEY, languageCode).apply()
+    }
+
+
+    private fun getSavedSelectedLanguageCode(context: Context): String? {
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+        return sharedPreferences.getString(PREF_LANGUAGE_KEY, null)
     }
 
     private fun updateAppLocale(context: Context, languageCode: String): Context {

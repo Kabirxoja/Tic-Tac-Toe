@@ -11,4 +11,11 @@
     <string name="start_game">O‘yinni boshlash</string>
     <string name="change_language">Tilni o‘zgartirish</string>
     <string name="replay_game">Takrorlash</string>
+    <string name="you_win">Siz g\'alaba qozondingiz!</string>
+    <string name="robot_win">Robot g\'alaba qozondi!</string>
+    <string name="draw">Durang</string>
+    <string name="x_turn">X - o‘yinchining navbati</string>
+    <string name="o_turn">O - o‘yinchining navbati</string>
+    <string name="x_player_won">X o’yinchisi yutdi!</string>
+    <string name="o_player_won">O o’yinchisi yutdi!</string>
 </resources>

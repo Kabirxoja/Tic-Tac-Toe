@@ -1,19 +1,17 @@
 package uz.kabir.pastimegame
 
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import uz.kabir.pastimegame.AnimationButton.animateClick
 import uz.kabir.pastimegame.databinding.FragmentBlotBinding
 import kotlin.random.Random
 
-class BoltFragment : Fragment() {
+class InfiniteFragment : Fragment() {
 
     private var _binding: FragmentBlotBinding? = null
     private val binding get() = _binding!!
@@ -52,6 +50,7 @@ class BoltFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initViews()
         initGame()
+        resetBoard()
 
         arguments?.let {
             user1ImageIndex = it.getInt("user1ImageIndex")
@@ -80,14 +79,15 @@ class BoltFragment : Fragment() {
     }
 
     private fun initGame() {
-        resetBoard()
         binding.resetButton.setOnClickListener {
             resetBoard()
+            binding.resetButton.animateClick()
         }
         for (i in 0 until 3) {
             for (j in 0 until 3) {
                 buttons[i][j].setOnClickListener {
                     onButtonClick(i, j)
+                    buttons[i][j].animateClick(40)
                 }
             }
         }
@@ -120,8 +120,6 @@ class BoltFragment : Fragment() {
             binding.animationView2.visibility = View.VISIBLE
             binding.animationView1.visibility = View.INVISIBLE
         }
-
-
     }
 
     private fun onButtonClick(row: Int, col: Int) {
@@ -148,14 +146,14 @@ class BoltFragment : Fragment() {
                 val winPositions = checkWin(player1Moves)
                 if (winPositions != null) {
                     player1Score++
-                    binding.statusText.text = "Wins! $user2Name"
+                    binding.statusText.text = resources.getString(R.string.o_player_won)
                     binding.indicatorUser1.setImageResource(R.drawable.ic_winner)
                     disableButtons()
                     updateScore()
                     highlightWin(winPositions)
                     binding.animationView1.visibility = View.VISIBLE
                 } else if (isBoardFull()) {
-                    binding.statusText.text = "Draw!"
+                    binding.statusText.text = getString(R.string.draw)
                     disableButtons()
                 } else {
                     currentPlayer = 2
@@ -176,14 +174,14 @@ class BoltFragment : Fragment() {
                 val winPositions = checkWin(player2Moves)
                 if (winPositions != null) {
                     player2Score++
-                    binding.statusText.text = "Wins! $user1Name"
+                    binding.statusText.text = resources.getString(R.string.x_player_won)
                     binding.indicatorUser2.setImageResource(R.drawable.ic_winner)
                     disableButtons()
                     updateScore()
                     highlightWin(winPositions)
                     binding.animationView2.visibility = View.VISIBLE
                 } else if (isBoardFull()) {
-                    binding.statusText.text = "Draw!"
+                    binding.statusText.text = getString(R.string.draw)
                     disableButtons()
                 } else {
                     currentPlayer = 1
@@ -251,7 +249,6 @@ class BoltFragment : Fragment() {
         } else if (player2Moves.contains(move)) {
             button.setImageResource(R.drawable.faded_x)
         }
-
     }
 
     private fun updateScore() {

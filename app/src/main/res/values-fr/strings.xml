@@ -11,4 +11,11 @@
     <string name="start_game">Démarrer la partie</string>
     <string name="change_language">Changer de langue</string>
     <string name="replay_game">Rejouer</string>
+    <string name="you_win">Tu as gagné !</string>
+    <string name="robot_win">Le robot a gagné !</string>
+    <string name="draw">Nul</string>
+    <string name="x_turn">Tour du joueur X</string>
+    <string name="o_turn">Tour du joueur O</string>
+    <string name="x_player_won">Le joueur X a gagné !</string>
+    <string name="o_player_won">Le joueur O gagne !</string>
 </resources>

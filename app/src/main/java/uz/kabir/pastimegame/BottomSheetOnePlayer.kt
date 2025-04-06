@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import uz.kabir.pastimegame.AnimationButton.animateClick
 import uz.kabir.pastimegame.databinding.FragmentBottomSheetOnePlayerBinding
 
 class BottomSheetOnePlayer : BottomSheetDialogFragment() {
@@ -14,7 +15,7 @@ class BottomSheetOnePlayer : BottomSheetDialogFragment() {
     private var _binding: FragmentBottomSheetOnePlayerBinding? = null
     private val binding get() = _binding!!
 
-    private var user1ImageIndex = 0
+    private var user1ImageIndex = 5
     private var isHardMode = false
 
     private val userImages = arrayOf(
@@ -49,6 +50,7 @@ class BottomSheetOnePlayer : BottomSheetDialogFragment() {
     private fun setupClickListeners() {
         binding.userImageX.setOnClickListener {
             user1ImageIndex = (user1ImageIndex + 1) % userImages.size
+            binding.userImageX.animateClick()
             updateUserImages()
         }
 
@@ -56,11 +58,13 @@ class BottomSheetOnePlayer : BottomSheetDialogFragment() {
         binding.buttonHard.setOnClickListener {
             isHardMode = true
             updateModeButtons()
+            binding.buttonHard.animateClick()
         }
 
         binding.buttonEasy.setOnClickListener {
             isHardMode = false
             updateModeButtons()
+            binding.buttonEasy.animateClick()
         }
 
         binding.buttonMoveNextFragment.setOnClickListener {
@@ -74,6 +78,7 @@ class BottomSheetOnePlayer : BottomSheetDialogFragment() {
             } else {
                 findNavController().navigate(R.id.action_mainFragment_to_ticTacToeRandomFragment,bundle)
             }
+            binding.buttonMoveNextFragment.animateClick()
             dismiss()
         }
     }

@@ -11,4 +11,11 @@
     <string name="start_game">Oyındı baslaw</string>
     <string name="change_language">Tildi ózgertiw</string>
     <string name="replay_game">qayta atqarıw</string>
+    <string name="you_win">Siz jeńiske eristińiz!</string>
+    <string name="robot_win">Robot jeńiske eristi!</string>
+    <string name="draw">teń</string>
+    <string name="x_turn">X-oyınshınıń náwbeti</string>
+    <string name="o_turn">O-oyınshınıń náwbeti</string>
+    <string name="x_player_won">X oyinshi utti!</string>
+    <string name="o_player_won">O oyinshi utti!</string>
 </resources>
