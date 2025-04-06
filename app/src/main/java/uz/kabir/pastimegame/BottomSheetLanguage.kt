@@ -55,11 +55,6 @@ class BottomSheetLanguage : BottomSheetDialogFragment() {
 
         languageAdapter.setOnClickListener {
             selectedLanguageCode = it.iconCode
-            println("Selected language code: ${it.iconCode}, name: ${it.name}")
-            // Optionally update UI to indicate selection
-
-
-
             selectedLanguageCode?.let { code ->
                 saveLanguage(requireContext(), code)
                 updateAppLocale(requireContext(), code)

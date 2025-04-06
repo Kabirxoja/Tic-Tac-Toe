@@ -166,8 +166,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:hint="Player X Name"
-
+                android:hint="@string/player_x_name"
                 android:textColor="@color/white"
                 />
         </LinearLayout>
@@ -196,7 +195,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:hint="Player O Name"
+                android:hint="@string/player_o_name"
                 android:textColor="@color/white"
 
                 />
@@ -213,11 +212,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Next"
+        android:text="@string/start_game"
         android:textSize="18sp"
         android:background="@drawable/bac_curve"
         android:backgroundTint="@color/white"
         android:textColor="@color/black"
+
 
         />
 

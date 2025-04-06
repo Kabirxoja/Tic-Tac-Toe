@@ -10,4 +10,5 @@
     <string name="level_hard">Qiyin</string>
     <string name="start_game">O‘yinni boshlash</string>
     <string name="change_language">Tilni o‘zgartirish</string>
+    <string name="replay_game">Takrorlash</string>
 </resources>

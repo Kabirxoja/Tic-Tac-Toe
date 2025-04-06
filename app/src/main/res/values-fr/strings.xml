@@ -10,4 +10,5 @@
     <string name="level_hard">Difficile</string>
     <string name="start_game">Démarrer la partie</string>
     <string name="change_language">Changer de langue</string>
+    <string name="replay_game">Rejouer</string>
 </resources>

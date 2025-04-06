@@ -10,4 +10,5 @@
     <string name="level_hard">Hard</string>
     <string name="start_game">Start the game</string>
     <string name="change_language">Change language</string>
+    <string name="replay_game">Replay</string>
 </resources>

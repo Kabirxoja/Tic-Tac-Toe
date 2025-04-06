@@ -18,10 +18,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
+            android:layout_marginHorizontal="12dp"
             android:gravity="center_horizontal"
             android:paddingEnd="10dp"
             android:paddingBottom="6dp"
-            android:layout_marginHorizontal="12dp"
 
 
             >
@@ -73,11 +73,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
+            android:layout_marginHorizontal="12dp"
             android:layout_toEndOf="@+id/image_container"
             android:gravity="center_horizontal"
             android:paddingEnd="10dp"
             android:paddingBottom="6dp"
-            android:layout_marginHorizontal="12dp"
 
 
             >
@@ -132,11 +132,11 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
         android:background="@drawable/bac_curve"
         android:backgroundTint="#85E289"
-        android:padding="12dp"
-        android:layout_marginTop="12dp"
         android:orientation="vertical"
+        android:padding="12dp"
 
         >
 
@@ -162,9 +162,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:hint="Player X Name"
-
-
+                android:hint="@string/player_x_name"
                 android:textColor="@color/white" />
         </LinearLayout>
 
@@ -183,9 +181,9 @@
                 android:layout_weight="1"
                 android:background="@drawable/bac_curve"
                 android:backgroundTint="@color/white"
-                android:text="Easy"
-                android:textSize="18sp"
+                android:text="@string/level_easy"
                 android:textColor="@color/black"
+                android:textSize="18sp"
 
                 />
 
@@ -196,16 +194,14 @@
                 android:layout_weight="1"
                 android:background="@drawable/bac_curve"
                 android:backgroundTint="@color/white"
-                android:text="Hard"
-                android:textSize="18sp"
+                android:text="@string/level_hard"
                 android:textColor="@color/black"
+                android:textSize="18sp"
 
                 />
         </LinearLayout>
 
     </LinearLayout>
-
-
 
 
     <Button
@@ -215,9 +211,9 @@
         android:layout_marginTop="16dp"
         android:background="@drawable/bac_curve"
         android:backgroundTint="@color/white"
-        android:text="Next"
-        android:textSize="18sp"
+        android:text="@string/start_game"
         android:textColor="@color/black"
+        android:textSize="18sp"
 
         />
 

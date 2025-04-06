@@ -55,8 +55,10 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="@string/play_with_robot"
-                android:textSize="24sp"
+                android:textSize="18sp"
                 android:textColor="@color/black"
+                android:gravity="center"
+                android:layout_marginHorizontal="8dp"
 
                 />
 
@@ -94,8 +96,10 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="@string/play_with_friend"
-                android:textSize="24sp"
+                android:textSize="18sp"
                 android:textColor="@color/black"
+                android:gravity="center"
+                android:layout_marginHorizontal="8dp"
 
                 />
 
@@ -131,9 +135,10 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="@string/play_infinite_move"
-                android:textSize="24sp"
+                android:textSize="18sp"
                 android:textColor="@color/black"
                 android:gravity="center"
+                android:layout_marginHorizontal="8dp"
 
                 />
 

@@ -1,6 +1,7 @@
 package uz.kabir.pastimegame
 
 import android.content.Context
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -18,9 +19,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-
-
     }
 
 
@@ -40,7 +38,7 @@ class MainActivity : AppCompatActivity() {
         val locale = Locale(languageCode)
         Locale.setDefault(locale)
         val resources = context.resources
-        val config = android.content.res.Configuration(resources.configuration)
+        val config = Configuration(resources.configuration)
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
             config.setLocale(locale)
             config.setLayoutDirection(locale)
