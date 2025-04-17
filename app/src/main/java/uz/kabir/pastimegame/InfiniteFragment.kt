@@ -1,6 +1,10 @@
 package uz.kabir.pastimegame
 
+import android.media.AudioManager
+import android.media.MediaPlayer
+import android.media.audiofx.Equalizer
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +12,7 @@ import android.widget.ImageButton
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import uz.kabir.pastimegame.AnimationButton.animateClick
+import uz.kabir.pastimegame.MySharedPreference.getStateAudio
 import uz.kabir.pastimegame.databinding.FragmentBlotBinding
 import kotlin.random.Random
 
@@ -38,11 +43,19 @@ class InfiniteFragment : Fragment() {
         R.drawable.ic_character_man_4,
     )
 
+    private lateinit var mediaPlayer: MediaPlayer
+    private lateinit var equalizer: Equalizer
+    private var audioOn = false
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentBlotBinding.inflate(inflater, container, false)
+
+        audioOn = getStateAudio(requireContext())
+
+
         return binding.root
     }
 
@@ -98,8 +111,7 @@ class InfiniteFragment : Fragment() {
             for (j in 0 until 3) {
                 buttons[i][j].setImageResource(0)
                 buttons[i][j].isEnabled = true
-                buttons[i][j]?.backgroundTintList =
-                    ContextCompat.getColorStateList(binding.root.context, R.color.defaultBackground)
+                buttons[i][j].backgroundTintList = ContextCompat.getColorStateList(binding.root.context, R.color.defaultBackground)
             }
         }
         currentPlayer = Random.nextInt(1, 3)
@@ -133,6 +145,10 @@ class InfiniteFragment : Fragment() {
         val button = buttons[row][col]
         if (button.drawable == null) {
             if (currentPlayer == 1) {
+
+                if (audioOn)
+                setAudioFile(true)
+
                 button.setImageResource(R.drawable.ic_main_o)
                 player1Moves.add(Pair(row, col))
                 if (player1Moves.size > 3) {
@@ -161,6 +177,11 @@ class InfiniteFragment : Fragment() {
                     binding.animationView1.visibility = View.INVISIBLE
                 }
             } else {
+
+                if (audioOn)
+                setAudioFile(false)
+
+
                 button.setImageResource(R.drawable.ic_main_x)
                 player2Moves.add(Pair(row, col))
                 if (player2Moves.size > 3) {
@@ -253,6 +274,47 @@ class InfiniteFragment : Fragment() {
 
     private fun updateScore() {
         binding.scoreTable.text = "$player1Score:$player2Score"
+    }
+
+    private fun setAudioFile(boolean: Boolean) {
+        if (boolean) {
+            mediaPlayer = MediaPlayer.create(binding.root.context, R.raw.audio_1)
+            mediaPlayer.setVolume(0.3f, 0.3f)
+            Log.d("birinchi", "Correct answer")
+        } else {
+            mediaPlayer = MediaPlayer.create(binding.root.context, R.raw.audio_2)
+            mediaPlayer.setVolume(0.3f, 0.3f)
+            Log.d("birinchi", "Mistake answer")
+        }
+
+        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC)
+        mediaPlayer.start()
+
+
+        mediaPlayer.setOnPreparedListener {
+            // Check if the Equalizer is supported on this device
+            try {
+                equalizer = Equalizer(0, mediaPlayer.audioSessionId).apply {
+                    enabled = true
+                    // Configure each band of the Equalizer
+                    for (i in 0 until numberOfBands) {
+                        setBandLevel(
+                            i.toShort(),
+                            1000.toShort()
+                        ) // Example: increase each band's level
+                    }
+                }
+                Log.d("Equalizer", "Equalizer successfully configured")
+            } catch (e: Exception) {
+                Log.e("Equalizer", "Failed to initialize Equalizer: ${e.message}")
+            }
+        }
+
+        // Set an OnCompletionListener to release the MediaPlayer when done
+        mediaPlayer.setOnCompletionListener {
+            it.release()
+            Log.d("MediaPlayer", "MediaPlayer released")
+        }
     }
 
     override fun onDestroyView() {

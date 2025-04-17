@@ -14,6 +14,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import uz.kabir.pastimegame.AnimationButton.animateClick
+import uz.kabir.pastimegame.MySharedPreference.getStateAudio
+import uz.kabir.pastimegame.MySharedPreference.saveStateAudio
 import uz.kabir.pastimegame.databinding.FragmentMainBinding
 import java.util.Locale
 
@@ -54,7 +56,23 @@ class MainFragment : Fragment() {
             binding.btnLanguage.animateClick()
         }
 
+        if (getStateAudio(requireContext())){
+            binding.btnAudio.setImageResource(R.drawable.ic_audio)
+        }else{
+            binding.btnAudio.setImageResource(R.drawable.ic_audio_no)
+        }
 
+        binding.btnAudio.setOnClickListener {
+            if (getStateAudio(requireContext())){
+                binding.btnAudio.setImageResource(R.drawable.ic_audio_no)
+                saveStateAudio(requireContext(), false)
+            }else{
+                binding.btnAudio.setImageResource(R.drawable.ic_audio)
+                saveStateAudio(requireContext(), true)
+            }
+            binding.btnAudio.animateClick()
+            Toast.makeText(binding.root.context, "audio: ${getStateAudio(requireContext())}", Toast.LENGTH_SHORT).show()
+        }
 
 
 

@@ -3,9 +3,13 @@ package uz.kabir.pastimegame
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.Drawable
+import android.media.AudioManager
+import android.media.MediaPlayer
+import android.media.audiofx.Equalizer
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +19,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import uz.kabir.pastimegame.AnimationButton.animateClick
+import uz.kabir.pastimegame.MySharedPreference.getStateAudio
 import uz.kabir.pastimegame.databinding.FragmentTicTacToeAIBinding
 
 
@@ -47,6 +52,11 @@ class AIFragment : Fragment() {
     private var countWinnerO = 0
     private var isXTurn = true
 
+    private lateinit var mediaPlayer: MediaPlayer
+    private lateinit var equalizer: Equalizer
+    private var audioOn = false
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -58,6 +68,15 @@ class AIFragment : Fragment() {
             user1ImageIndex = it.getInt("user1ImageIndex")
             user1Name = it.getString("user1Name")
         }
+
+        audioOn = getStateAudio(requireContext())
+
+        return root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
 
         binding.userName2.text = user1Name
         binding.userImage2.setBackgroundResource(userImages[user1ImageIndex])
@@ -89,7 +108,7 @@ class AIFragment : Fragment() {
         xDrawable = ContextCompat.getDrawable(binding.root.context, R.drawable.ic_main_x)!!
         oDrawable = ContextCompat.getDrawable(binding.root.context, R.drawable.ic_main_o)!!
 
-        return root
+
     }
 
     private fun makeMove(row: Int, col: Int) {
@@ -97,22 +116,18 @@ class AIFragment : Fragment() {
 
         board[row][col] = 'X'
         buttons[row][col].setImageDrawable(xDrawable)
-        isXTurn = false
 
+        isXTurn = false
         binding.animationView1.visibility = View.VISIBLE
         binding.animationView2.visibility = View.INVISIBLE
+        if (audioOn) setAudioFile(true)
 
         val winPositions = getWinningPositions('X')
         if (winPositions != null) {
             statusText.text = resources.getString(R.string.you_win)
             countWinnerX++
             highlightWinningButtons(winPositions)
-            binding.indicatorUser2.setImageDrawable(
-                ContextCompat.getDrawable(
-                    binding.root.context,
-                    R.drawable.ic_winner
-                )
-            )
+            binding.indicatorUser2.setImageDrawable(ContextCompat.getDrawable(binding.root.context, R.drawable.ic_winner))
             disableButtons()
             return
         }
@@ -157,9 +172,9 @@ class AIFragment : Fragment() {
         }
 
         isXTurn = true
-
         binding.animationView1.visibility = View.INVISIBLE
         binding.animationView2.visibility = View.VISIBLE
+        if(audioOn) setAudioFile(false)
     }
 
     private fun minimaxMove(): Pair<Int, Int> {
@@ -197,8 +212,7 @@ class AIFragment : Fragment() {
                     board[i][j] = if (isMaximizing) 'O' else 'X'
                     val score = minimax(!isMaximizing)
                     board[i][j] = ' '
-                    bestScore =
-                        if (isMaximizing) maxOf(score, bestScore) else minOf(score, bestScore)
+                    bestScore = if (isMaximizing) maxOf(score, bestScore) else minOf(score, bestScore)
                 }
             }
         }
@@ -227,8 +241,7 @@ class AIFragment : Fragment() {
 
     private fun highlightWinningButtons(positions: List<Pair<Int, Int>>) {
         positions.forEach { (row, col) ->
-            buttons[row][col].backgroundTintList =
-                ContextCompat.getColorStateList(binding.root.context, R.color.winBackground)
+            buttons[row][col].backgroundTintList = ContextCompat.getColorStateList(binding.root.context, R.color.winBackground)
         }
     }
 
@@ -274,10 +287,55 @@ class AIFragment : Fragment() {
         }
 
         updateScoreDisplay()
-
     }
 
     private fun updateScoreDisplay() {
         binding.scoreTable.text = "$countWinnerO:$countWinnerX"
+    }
+
+    private fun setAudioFile(boolean: Boolean) {
+        if (boolean) {
+            mediaPlayer = MediaPlayer.create(binding.root.context, R.raw.audio_1)
+            mediaPlayer.setVolume(0.3f, 0.3f)
+            Log.d("birinchi", "Correct answer")
+        } else {
+            mediaPlayer = MediaPlayer.create(binding.root.context, R.raw.audio_2)
+            mediaPlayer.setVolume(0.3f, 0.3f)
+            Log.d("birinchi", "Mistake answer")
+        }
+
+        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC)
+        mediaPlayer.start()
+
+
+        mediaPlayer.setOnPreparedListener {
+            // Check if the Equalizer is supported on this device
+            try {
+                equalizer = Equalizer(0, mediaPlayer.audioSessionId).apply {
+                    enabled = true
+                    // Configure each band of the Equalizer
+                    for (i in 0 until numberOfBands) {
+                        setBandLevel(
+                            i.toShort(),
+                            1000.toShort()
+                        ) // Example: increase each band's level
+                    }
+                }
+                Log.d("Equalizer", "Equalizer successfully configured")
+            } catch (e: Exception) {
+                Log.e("Equalizer", "Failed to initialize Equalizer: ${e.message}")
+            }
+        }
+
+        // Set an OnCompletionListener to release the MediaPlayer when done
+        mediaPlayer.setOnCompletionListener {
+            it.release()
+            Log.d("MediaPlayer", "MediaPlayer released")
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

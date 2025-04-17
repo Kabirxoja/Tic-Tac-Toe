@@ -1,10 +1,14 @@
 package uz.kabir.pastimegame
 
 import android.graphics.drawable.Drawable
+import android.media.AudioManager
+import android.media.MediaPlayer
+import android.media.audiofx.Equalizer
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +18,7 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import uz.kabir.pastimegame.AnimationButton.animateClick
+import uz.kabir.pastimegame.MySharedPreference.getStateAudio
 import uz.kabir.pastimegame.databinding.FragmentTicTacToeRandomBinding
 import java.util.Random
 
@@ -50,12 +55,19 @@ class RandomFragment : Fragment() {
         R.drawable.ic_character_man_2,
         R.drawable.ic_character_man_4,
     )
+    private lateinit var mediaPlayer: MediaPlayer
+    private lateinit var equalizer: Equalizer
+    private var audioOn = false
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentTicTacToeRandomBinding.inflate(inflater, container, false)
+
+        audioOn = getStateAudio(requireContext())
+
         return binding.root
     }
 
@@ -79,7 +91,11 @@ class RandomFragment : Fragment() {
 
         buttons = Array(3) { row ->
             Array(3) { col ->
-                val buttonID = resources.getIdentifier("button${row}${col}", "id", binding.root.context.packageName)
+                val buttonID = resources.getIdentifier(
+                    "button${row}${col}",
+                    "id",
+                    binding.root.context.packageName
+                )
                 binding.root.findViewById<ImageButton>(buttonID).apply {
                     setOnClickListener {
                         it.animateClick(40)
@@ -123,7 +139,7 @@ class RandomFragment : Fragment() {
         }
 
         board[row][col] = currentPlayer
-        buttons[row][col]?.setImageDrawable(if (currentPlayer == 'X') xDrawable else oDrawable)
+        buttons[row][col].setImageDrawable(if (currentPlayer == 'X') xDrawable else oDrawable)
 
         if (checkWin(currentPlayer)) {
             if (currentPlayer == 'X') {
@@ -164,6 +180,8 @@ class RandomFragment : Fragment() {
             binding.animationView1.visibility = View.VISIBLE
             binding.animationView2.visibility = View.INVISIBLE
 
+            if (audioOn) setAudioFile(true)
+
             Handler(Looper.getMainLooper()).postDelayed({
                 if (_binding != null) {
                     aiRandomMove()
@@ -197,7 +215,7 @@ class RandomFragment : Fragment() {
             val random = Random()
             val move = emptyCells[random.nextInt(emptyCells.size)]
             board[move.first][move.second] = 'O'
-            buttons[move.first][move.second]?.setImageDrawable(oDrawable)
+            buttons[move.first][move.second].setImageDrawable(oDrawable)
 
             if (checkWin('O')) {
                 statusText.text = getString(R.string.robot_win)
@@ -215,6 +233,9 @@ class RandomFragment : Fragment() {
             if (currentPlayer == 'O') {
                 binding.animationView1.visibility = View.VISIBLE
                 binding.animationView2.visibility = View.INVISIBLE
+
+                if (audioOn) setAudioFile(false)
+
             } else {
                 binding.animationView2.visibility = View.VISIBLE
                 binding.animationView1.visibility = View.INVISIBLE
@@ -298,10 +319,10 @@ class RandomFragment : Fragment() {
         }
         for (i in 0..2) {
             for (j in 0..2) {
-                buttons[i][j]?.setImageDrawable(null)
-                buttons[i][j]?.backgroundTintList =
+                buttons[i][j].setImageDrawable(null)
+                buttons[i][j].backgroundTintList =
                     ContextCompat.getColorStateList(requireContext(), R.color.defaultBackground)
-                buttons[i][j]?.isEnabled = true
+                buttons[i][j].isEnabled = true
             }
         }
 
@@ -331,6 +352,48 @@ class RandomFragment : Fragment() {
         for (button in winningButtons) {
             button.backgroundTintList =
                 ContextCompat.getColorStateList(requireContext(), R.color.winBackground)
+        }
+    }
+
+
+    private fun setAudioFile(boolean: Boolean) {
+        if (boolean) {
+            mediaPlayer = MediaPlayer.create(binding.root.context, R.raw.audio_1)
+            mediaPlayer.setVolume(0.3f, 0.3f)
+            Log.d("birinchi", "Correct answer")
+        } else {
+            mediaPlayer = MediaPlayer.create(binding.root.context, R.raw.audio_2)
+            mediaPlayer.setVolume(0.3f, 0.3f)
+            Log.d("birinchi", "Mistake answer")
+        }
+
+        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC)
+        mediaPlayer.start()
+
+
+        mediaPlayer.setOnPreparedListener {
+            // Check if the Equalizer is supported on this device
+            try {
+                equalizer = Equalizer(0, mediaPlayer.audioSessionId).apply {
+                    enabled = true
+                    // Configure each band of the Equalizer
+                    for (i in 0 until numberOfBands) {
+                        setBandLevel(
+                            i.toShort(),
+                            1000.toShort()
+                        ) // Example: increase each band's level
+                    }
+                }
+                Log.d("Equalizer", "Equalizer successfully configured")
+            } catch (e: Exception) {
+                Log.e("Equalizer", "Failed to initialize Equalizer: ${e.message}")
+            }
+        }
+
+        // Set an OnCompletionListener to release the MediaPlayer when done
+        mediaPlayer.setOnCompletionListener {
+            it.release()
+            Log.d("MediaPlayer", "MediaPlayer released")
         }
     }
 

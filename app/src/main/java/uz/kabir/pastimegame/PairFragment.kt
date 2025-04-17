@@ -1,7 +1,11 @@
 package uz.kabir.pastimegame
 
 import android.graphics.drawable.Drawable
+import android.media.AudioManager
+import android.media.MediaPlayer
+import android.media.audiofx.Equalizer
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +15,7 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import uz.kabir.pastimegame.AnimationButton.animateClick
+import uz.kabir.pastimegame.MySharedPreference.getStateAudio
 import uz.kabir.pastimegame.databinding.FragmentTicTacToePairBinding
 import java.util.Random
 
@@ -45,12 +50,19 @@ class PairFragment : Fragment() {
         R.drawable.ic_character_man_4,
     )
 
+    private lateinit var mediaPlayer: MediaPlayer
+    private lateinit var equalizer: Equalizer
+    private var audioOn = false
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentTicTacToePairBinding.inflate(inflater, container, false)
+
+        audioOn = getStateAudio(requireContext())
+
         return binding.root
     }
 
@@ -112,10 +124,8 @@ class PairFragment : Fragment() {
     }
 
     private fun updateTurnIndicator() {
-        binding.animationView1.visibility =
-            if (currentPlayer == 'O') View.VISIBLE else View.INVISIBLE
-        binding.animationView2.visibility =
-            if (currentPlayer == 'X') View.VISIBLE else View.INVISIBLE
+        binding.animationView1.visibility = if (currentPlayer == 'O') View.VISIBLE else View.INVISIBLE
+        binding.animationView2.visibility = if (currentPlayer == 'X') View.VISIBLE else View.INVISIBLE
         statusText.text = getString(if (currentPlayer == 'X') R.string.x_turn else R.string.o_turn)
     }
 
@@ -124,6 +134,10 @@ class PairFragment : Fragment() {
 
         gameState[row][col] = currentPlayer
         buttons[row][col].setImageDrawable(if (currentPlayer == 'X') xDrawable else oDrawable)
+
+        //Audio
+        if (currentPlayer == 'O') { if (audioOn) setAudioFile(true) }
+        if (currentPlayer == 'X') { if (audioOn) setAudioFile(false) }
 
         if (checkForWin()) {
             handleWin()
@@ -252,6 +266,48 @@ class PairFragment : Fragment() {
         binding.indicatorUser2.setImageResource(R.drawable.ic_main_x)
         updateTurnIndicator()
     }
+
+    private fun setAudioFile(boolean: Boolean) {
+        if (boolean) {
+            mediaPlayer = MediaPlayer.create(binding.root.context, R.raw.audio_1)
+            mediaPlayer.setVolume(0.3f, 0.3f)
+            Log.d("birinchi", "Correct answer")
+        } else {
+            mediaPlayer = MediaPlayer.create(binding.root.context, R.raw.audio_2)
+            mediaPlayer.setVolume(0.3f, 0.3f)
+            Log.d("birinchi", "Mistake answer")
+        }
+
+        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC)
+        mediaPlayer.start()
+
+
+        mediaPlayer.setOnPreparedListener {
+            // Check if the Equalizer is supported on this device
+            try {
+                equalizer = Equalizer(0, mediaPlayer.audioSessionId).apply {
+                    enabled = true
+                    // Configure each band of the Equalizer
+                    for (i in 0 until numberOfBands) {
+                        setBandLevel(
+                            i.toShort(),
+                            1000.toShort()
+                        ) // Example: increase each band's level
+                    }
+                }
+                Log.d("Equalizer", "Equalizer successfully configured")
+            } catch (e: Exception) {
+                Log.e("Equalizer", "Failed to initialize Equalizer: ${e.message}")
+            }
+        }
+
+        // Set an OnCompletionListener to release the MediaPlayer when done
+        mediaPlayer.setOnCompletionListener {
+            it.release()
+            Log.d("MediaPlayer", "MediaPlayer released")
+        }
+    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

@@ -8,6 +8,10 @@
 
     </style>
 
+    <style name="ButtonAnimation" parent="Base.Theme.MyApplication">
+        <item name="android:stateListAnimator">@animator/click_animator</item>
+    </style>
+
 
 
     <style name="Theme.MyApplication" parent="Base.Theme.MyApplication" />

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Tic Tac Toe</string>
-    <string name="play_with_friend">Robot bilan o\'ynash</string>
-    <string name="play_with_robot">Do\'st bilan o\'ynash</string>
+    <string name="play_with_friend">Do\'st bilan o\'ynash</string>
+    <string name="play_with_robot">Robot bilan o\'ynash</string>
     <string name="play_infinite_move">Cheksiz yurish</string>
     <string name="player_x_name">"X o‘yinchi nomi "</string>
     <string name="player_o_name">"O o‘yinchi nomi "</string>
