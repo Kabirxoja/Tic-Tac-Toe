@@ -12,6 +12,7 @@ constraintlayout = "2.2.1"
 navigationFragment = "2.8.9"
 versionLottie = "6.1.0"
 preferenceKtx = "1.2.1"
+inAppUpdate = "2.1.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -25,6 +26,8 @@ androidx-constraintlayout = { group = "androidx.constraintlayout", name = "const
 androidx-navigation-fragment = { group = "androidx.navigation", name = "navigation-fragment", version.ref = "navigationFragment" }
 animation = {group="com.airbnb.android", name="lottie", version.ref="versionLottie"}
 androidx-preference-ktx = { group = "androidx.preference", name = "preference-ktx", version.ref = "preferenceKtx" }
+app-update = {group="com.google.android.play", name = "app-update", version.ref = "inAppUpdate"}
+app-update-ktx = {group="com.google.android.play", name = "app-update-ktx", version.ref = "inAppUpdate"}
 
 
 [plugins]

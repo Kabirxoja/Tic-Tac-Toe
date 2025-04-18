@@ -33,6 +33,14 @@ class MainFragment : Fragment() {
         _binding = FragmentMainBinding.inflate(inflater, container, false)
         val root = binding.root
 
+
+
+        return root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         binding.btnTwoPlayer.setOnClickListener {
             val bottomSheetTwoPlayer = BottomSheetTwoPlayer("pair")
             bottomSheetTwoPlayer.show(childFragmentManager, bottomSheetTwoPlayer.tag)
@@ -75,9 +83,6 @@ class MainFragment : Fragment() {
         }
 
 
-
-
-        return root
     }
 
 

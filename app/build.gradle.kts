@@ -11,9 +11,8 @@ android {
         applicationId = "uz.kabir.pastimegame"
         minSdk = 24
         targetSdk = 35
-        versionCode = 1
-        versionName = "1.0"
-
+        versionCode = 2
+        versionName = "2.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -51,5 +50,7 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     implementation(libs.animation)
+    implementation(libs.app.update)
+    implementation(libs.app.update.ktx)
 
 }
