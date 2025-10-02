@@ -1,30 +1,32 @@
-package uz.kabir.pastimegame
+package uz.kabir.pastimegame.screens
 
 import android.content.Context
 import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
 import android.preference.PreferenceManager
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.GridLayout
-import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import uz.kabir.pastimegame.LanguageAdapter
+import uz.kabir.pastimegame.LanguageItem
 import uz.kabir.pastimegame.databinding.FragmentBottomSheetLanguageBinding
-import uz.kabir.pastimegame.databinding.RecycleItemLayoutBinding
 import java.util.Locale
-
-private const val PREF_LANGUAGE_KEY = "app_language"
 
 class BottomSheetLanguage : BottomSheetDialogFragment() {
 
+    companion object{
+        private const val PREF_LANGUAGE_KEY = "app_language"
+    }
+
     private var _binding: FragmentBottomSheetLanguageBinding? = null
     private val binding get() = _binding!!
+    private lateinit var languageAdapter: LanguageAdapter
+
     private lateinit var languageRecyclerView: RecyclerView
     private var selectedLanguageCode: String? = null
     private val languageDataList = listOf(
@@ -35,7 +37,6 @@ class BottomSheetLanguage : BottomSheetDialogFragment() {
         LanguageItem("es", "Spanish"),
         LanguageItem("fr", "French")
     )
-    private lateinit var languageAdapter: LanguageAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,7 +52,8 @@ class BottomSheetLanguage : BottomSheetDialogFragment() {
 
         val savedSelectedLanguageCode = getSavedSelectedLanguageCode(requireContext())
 
-        languageAdapter = LanguageAdapter(languageDataList, savedSelectedLanguageCode) // Pass the saved code
+        languageAdapter =
+            LanguageAdapter(languageDataList, savedSelectedLanguageCode) // Pass the saved code
         binding.recyclerView.adapter = languageAdapter
         binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 3)
 

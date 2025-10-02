@@ -18,4 +18,7 @@
     <string name="o_turn">Player O\'s turn</string>
     <string name="x_player_won">Player X won!</string>
     <string name="o_player_won">Player O won!</string>
+
+    <string name="audio_on">Turn on</string>
+    <string name="audio_off">Turn off</string>
 </resources>

@@ -1,4 +1,4 @@
-package uz.kabir.pastimegame
+package uz.kabir.pastimegame.screens
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,6 +8,7 @@ import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import uz.kabir.pastimegame.AnimationButton.animateClick
+import uz.kabir.pastimegame.R
 import uz.kabir.pastimegame.databinding.FragmentBottomSheetOnePlayerBinding
 
 class BottomSheetOnePlayer : BottomSheetDialogFragment() {

@@ -3,9 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/ic_background_main_2"
     android:orientation="vertical"
-    tools:context=".MainFragment"
+    tools:context=".screens.MainFragment"
 
     >
 
@@ -18,8 +19,8 @@
 
         <ImageView
             android:id="@+id/btn_audio"
-            android:layout_width="34dp"
-            android:layout_height="34dp"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
             android:layout_alignParentStart="true"
             android:layout_gravity="start"
             android:layout_marginStart="18dp"
@@ -31,8 +32,8 @@
 
         <ImageButton
             android:id="@+id/btn_language"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="26dp"
+            android:layout_height="26dp"
             android:layout_alignParentEnd="true"
             android:layout_gravity="end"
             android:layout_marginTop="18dp"
@@ -46,7 +47,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:layout_gravity="center"
         android:gravity="center"
         android:orientation="vertical"
@@ -69,10 +71,10 @@
             >
 
             <ImageView
-                android:layout_width="72dp"
-                android:layout_height="72dp"
+                android:layout_width="62dp"
+                android:layout_height="62dp"
                 android:layout_gravity="center"
-                android:layout_marginStart="12dp"
+                android:layout_marginStart="8dp"
                 android:contentDescription="Reset Game"
                 android:src="@drawable/img_robot"
 
@@ -86,7 +88,7 @@
                 android:gravity="center"
                 android:text="@string/play_with_robot"
                 android:textColor="@color/black"
-                android:textSize="18sp"
+                android:textSize="16sp"
 
                 />
 
@@ -109,11 +111,11 @@
             >
 
             <ImageView
-                android:layout_width="72dp"
+                android:layout_width="62dp"
 
-                android:layout_height="72dp"
+                android:layout_height="62dp"
                 android:layout_gravity="center"
-                android:layout_marginStart="12dp"
+                android:layout_marginStart="8dp"
                 android:contentDescription="Reset Game"
                 android:src="@drawable/img_classic"
 
@@ -127,7 +129,7 @@
                 android:gravity="center"
                 android:text="@string/play_with_friend"
                 android:textColor="@color/black"
-                android:textSize="18sp"
+                android:textSize="16sp"
 
                 />
 
@@ -149,10 +151,10 @@
             >
 
             <ImageView
-                android:layout_width="72dp"
-                android:layout_height="72dp"
+                android:layout_width="62dp"
+                android:layout_height="62dp"
                 android:layout_gravity="center"
-                android:layout_marginStart="12dp"
+                android:layout_marginStart="8dp"
                 android:contentDescription="Reset Game"
                 android:src="@drawable/img_infinite"
 
@@ -166,7 +168,7 @@
                 android:gravity="center"
                 android:text="@string/play_infinite_move"
                 android:textColor="@color/black"
-                android:textSize="18sp"
+                android:textSize="16sp"
 
                 />
 
@@ -174,6 +176,13 @@
         </LinearLayout>
 
     </LinearLayout>
+
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        ads:adSize="BANNER"
+        ads:adUnitId="@string/admob_banner_id" />
 
 
 </LinearLayout>

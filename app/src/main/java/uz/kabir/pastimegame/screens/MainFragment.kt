@@ -1,24 +1,21 @@
-package uz.kabir.pastimegame
+package uz.kabir.pastimegame.screens
 
-import android.animation.AnimatorSet
-import android.animation.ObjectAnimator
-import android.content.Context
-import android.content.res.Configuration
-import android.os.Build
 import android.os.Bundle
-import android.preference.PreferenceManager
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.navigation.fragment.findNavController
+import androidx.fragment.app.Fragment
+import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.LoadAdError
 import uz.kabir.pastimegame.AnimationButton.animateClick
-import uz.kabir.pastimegame.MySharedPreference.getStateAudio
-import uz.kabir.pastimegame.MySharedPreference.saveStateAudio
+import uz.kabir.pastimegame.screens.BottomSheetOnePlayer
+import uz.kabir.pastimegame.screens.BottomSheetTwoPlayer
+import uz.kabir.pastimegame.MySharedPreference
+import uz.kabir.pastimegame.R
 import uz.kabir.pastimegame.databinding.FragmentMainBinding
-import java.util.Locale
-
 
 class MainFragment : Fragment() {
 
@@ -64,29 +61,78 @@ class MainFragment : Fragment() {
             binding.btnLanguage.animateClick()
         }
 
-        if (getStateAudio(requireContext())){
+        if (MySharedPreference.getStateAudio(requireContext())) {
             binding.btnAudio.setImageResource(R.drawable.ic_audio)
-        }else{
+        } else {
             binding.btnAudio.setImageResource(R.drawable.ic_audio_no)
         }
 
         binding.btnAudio.setOnClickListener {
-            if (getStateAudio(requireContext())){
+            if (MySharedPreference.getStateAudio(requireContext())) {
                 binding.btnAudio.setImageResource(R.drawable.ic_audio_no)
-                saveStateAudio(requireContext(), false)
-            }else{
+                MySharedPreference.saveStateAudio(requireContext(), false)
+            } else {
                 binding.btnAudio.setImageResource(R.drawable.ic_audio)
-                saveStateAudio(requireContext(), true)
+                MySharedPreference.saveStateAudio(requireContext(), true)
             }
             binding.btnAudio.animateClick()
-            Toast.makeText(binding.root.context, "audio: ${getStateAudio(requireContext())}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                binding.root.context,
+                "Audio: ${
+                    if (MySharedPreference.getStateAudio(requireContext())) getString(R.string.audio_on) else getString(
+                        R.string.audio_off
+                    )
+                }",
+                Toast.LENGTH_SHORT
+            ).show()
         }
+
+
+
+        binding.adView.adListener = object : AdListener() {
+            override fun onAdLoaded() {
+                Log.d("Mediation", "✅ AdMob banner yuklandi")
+            }
+
+            override fun onAdFailedToLoad(adError: LoadAdError) {
+                Log.d("Mediation", "❌ AdMob banner yuklanmadi: ${adError.message}")
+            }
+
+            override fun onAdOpened() {
+                Log.d("Mediation", "ℹ️ AdMob ochildi")
+            }
+
+            override fun onAdClicked() {
+                Log.d("Mediation", "👆 AdMob bosildi")
+            }
+
+            override fun onAdClosed() {
+                Log.d("Mediation", "↩️ Ad yopildi")
+            }
+        }
+
+        val adRequest = AdRequest.Builder().build()
+        binding.adView.loadAd(adRequest)
+        Log.d("Mediation", "AdMob yuklandi")
 
 
     }
 
 
+    override fun onPause() {
+        binding.adView.pause()
+        super.onPause()
+    }
 
+    override fun onResume() {
+        super.onResume()
+        binding.adView.resume()
+    }
+
+    override fun onDestroyView() {
+        binding.adView.destroy()
+        super.onDestroyView()
+    }
 
 
 }

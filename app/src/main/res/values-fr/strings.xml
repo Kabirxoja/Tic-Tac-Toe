@@ -18,4 +18,8 @@
     <string name="o_turn">Tour du joueur O</string>
     <string name="x_player_won">Le joueur X a gagné !</string>
     <string name="o_player_won">Le joueur O gagne !</string>
+
+    <string name="audio_on">Activer</string>
+    <string name="audio_off">Désactiver</string>
+
 </resources>

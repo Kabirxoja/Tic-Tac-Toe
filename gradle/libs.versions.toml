@@ -1,5 +1,5 @@
 [versions]
-agp = "8.5.0"
+agp = "8.10.1"
 kotlin = "1.9.0"
 coreKtx = "1.15.0"
 junit = "4.13.2"
@@ -13,6 +13,10 @@ navigationFragment = "2.8.9"
 versionLottie = "6.1.0"
 preferenceKtx = "1.2.1"
 inAppUpdate = "2.1.0"
+
+yandexAds = "7.15.2"
+yandexAdsAdmob = "7.15.2.0"
+admobAds = "23.1.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -28,6 +32,10 @@ animation = {group="com.airbnb.android", name="lottie", version.ref="versionLott
 androidx-preference-ktx = { group = "androidx.preference", name = "preference-ktx", version.ref = "preferenceKtx" }
 app-update = {group="com.google.android.play", name = "app-update", version.ref = "inAppUpdate"}
 app-update-ktx = {group="com.google.android.play", name = "app-update-ktx", version.ref = "inAppUpdate"}
+
+yandex-mobileads = {group="com.yandex.android", name = "mobileads", version.ref = "yandexAds"}
+yandex-admob-mobileads = {group = "com.yandex.ads.adapter", name="admob-mobileads", version.ref = "yandexAdsAdmob"}
+admob-ads = {group="com.google.android.gms", name = "play-services-ads", version.ref = "admobAds"}
 
 
 [plugins]

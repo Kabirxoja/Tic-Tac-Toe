@@ -11,8 +11,8 @@ android {
         applicationId = "uz.kabir.pastimegame"
         minSdk = 24
         targetSdk = 35
-        versionCode = 2
-        versionName = "2.0"
+        versionCode = 3
+        versionName = "3.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -52,5 +52,9 @@ dependencies {
     implementation(libs.animation)
     implementation(libs.app.update)
     implementation(libs.app.update.ktx)
+
+    implementation(libs.yandex.mobileads)
+    implementation(libs.yandex.admob.mobileads)
+    implementation(libs.admob.ads)
 
 }

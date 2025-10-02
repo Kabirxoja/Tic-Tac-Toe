@@ -18,4 +18,8 @@
     <string name="o_turn">Ход игрока O</string>
     <string name="x_player_won">Игрок X выиграл!</string>
     <string name="o_player_won">Игрок O выиграл!</string>
+
+    <string name="audio_on">Включить</string>
+    <string name="audio_off">Выключить</string>
+
 </resources>

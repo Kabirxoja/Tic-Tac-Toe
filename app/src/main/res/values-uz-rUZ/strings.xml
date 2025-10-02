@@ -18,4 +18,8 @@
     <string name="o_turn">O - o‘yinchining navbati</string>
     <string name="x_player_won">X o’yinchisi yutdi!</string>
     <string name="o_player_won">O o’yinchisi yutdi!</string>
+
+    <string name="audio_on">Yoqish</string>
+    <string name="audio_off">O‘chirish</string>
+
 </resources>
