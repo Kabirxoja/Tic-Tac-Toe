@@ -9,6 +9,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.os.LocaleListCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -19,7 +21,7 @@ import java.util.Locale
 
 class BottomSheetLanguage : BottomSheetDialogFragment() {
 
-    companion object{
+    companion object {
         private const val PREF_LANGUAGE_KEY = "app_language"
     }
 
@@ -65,7 +67,8 @@ class BottomSheetLanguage : BottomSheetDialogFragment() {
                 requireActivity().recreate()
                 dismiss()
             } ?: run {
-                Toast.makeText(requireContext(), "Please select a language", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Please select a language", Toast.LENGTH_SHORT)
+                    .show()
             }
         }
     }
@@ -81,20 +84,20 @@ class BottomSheetLanguage : BottomSheetDialogFragment() {
         return sharedPreferences.getString(PREF_LANGUAGE_KEY, null)
     }
 
-    private fun updateAppLocale(context: Context, languageCode: String): Context {
-        val locale = Locale(languageCode)
-        Locale.setDefault(locale)
-        val resources = context.resources
-        val config = Configuration(resources.configuration)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+    private fun updateAppLocale(context: Context, languageCode: String) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            // Android 13+ (API 33+)
+            val appLocale: LocaleListCompat = LocaleListCompat.forLanguageTags(languageCode)
+            AppCompatDelegate.setApplicationLocales(appLocale)
+        } else {
+            // Android 7.0 - Android 12 (API 24-32)
+            val locale = Locale(languageCode)
+            Locale.setDefault(locale)
+            val resources = context.resources
+            val config = Configuration(resources.configuration)
             config.setLocale(locale)
             config.setLayoutDirection(locale)
-            return context.createConfigurationContext(config)
-        } else {
-            config.locale = locale
-            config.setLayoutDirection(locale)
-            resources.updateConfiguration(config, resources.displayMetrics)
-            return context
+            context.createConfigurationContext(config)
         }
     }
 
