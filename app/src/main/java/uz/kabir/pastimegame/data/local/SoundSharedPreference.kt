@@ -1,8 +1,8 @@
-package uz.kabir.pastimegame
+package uz.kabir.pastimegame.data.local
 
 import android.content.Context
 
-object MySharedPreference {
+object SoundSharedPreference {
     private const val PREF_NAME = "audio_pref"
 
     fun saveStateAudio(context: Context, state: Boolean = false) {

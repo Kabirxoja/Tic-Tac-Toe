@@ -1,10 +1,9 @@
-package uz.kabir.pastimegame
+package uz.kabir.pastimegame.ui.fragments
 
 import android.graphics.drawable.Drawable
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.media.audiofx.Equalizer
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -17,8 +16,9 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import uz.kabir.pastimegame.AnimationButton.animateClick
-import uz.kabir.pastimegame.MySharedPreference.getStateAudio
+import uz.kabir.pastimegame.ui.views.AnimationButton.animateClick
+import uz.kabir.pastimegame.R
+import uz.kabir.pastimegame.data.local.SoundSharedPreference
 import uz.kabir.pastimegame.databinding.FragmentTicTacToeRandomBinding
 import java.util.Random
 
@@ -41,11 +41,8 @@ class RandomFragment : Fragment() {
     private lateinit var oDrawable: Drawable
     private var winningButtons = mutableListOf<ImageButton>()
 
-    // Add these variables to receive data
     private var user1ImageIndex: Int = 0
-    private var user2ImageIndex: Int = 0
     private var user1Name: String? = null
-    private var user2Name: String? = null
 
     private val userImages = arrayOf(
         R.drawable.ic_character_woman_1,
@@ -65,20 +62,18 @@ class RandomFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentTicTacToeRandomBinding.inflate(inflater, container, false)
-
-        audioOn = getStateAudio(requireContext())
-
+        audioOn = SoundSharedPreference.getStateAudio(requireContext())
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Receive data from Bundle
         arguments?.let {
             user1ImageIndex = it.getInt("user1ImageIndex")
             user1Name = it.getString("user1Name")
         }
+
         binding.userName2.text = user1Name
         binding.userImage2.setBackgroundResource(userImages[user1ImageIndex])
 
@@ -108,11 +103,25 @@ class RandomFragment : Fragment() {
         xDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.ic_main_x)!!
         oDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.ic_main_o)!!
 
-        // Randomly choose the starting player
-        val random = Random()
-        currentPlayer = if (random.nextBoolean()) 'X' else 'O'
+        savedInstanceState?.let { bundle ->
+            countWinnerX = bundle.getInt("countWinnerX")
+            countWinnerO = bundle.getInt("countWinnerO")
+            currentPlayer = bundle.getChar("currentPlayer")
+            val boardString = bundle.getString("board") ?: "         "
 
-        // If AI starts, make the first move
+            for (i in 0..2) {
+                for (j in 0..2) {
+                    board[i][j] = boardString[i * 3 + j]
+                }
+            }
+            restoreBoardUI()
+        }
+
+        if (savedInstanceState == null) {
+            val random = Random()
+            currentPlayer = if (random.nextBoolean()) 'X' else 'O'
+        }
+
         if (currentPlayer == 'O') {
             binding.animationView1.visibility = View.VISIBLE
             binding.animationView2.visibility = View.INVISIBLE
@@ -130,6 +139,20 @@ class RandomFragment : Fragment() {
             binding.animationView2.visibility = View.VISIBLE
             binding.animationView1.visibility = View.INVISIBLE
         }
+    }
+
+    private fun restoreBoardUI() {
+        for (i in 0..2) {
+            for (j in 0..2) {
+
+                when (board[i][j]) {
+                    'X' -> buttons[i][j].setImageDrawable(xDrawable)
+                    'O' -> buttons[i][j].setImageDrawable(oDrawable)
+                }
+            }
+        }
+
+        updateScoreDisplay()
     }
 
     private fun makeMove(row: Int, col: Int) {
@@ -195,11 +218,12 @@ class RandomFragment : Fragment() {
             binding.animationView2.visibility = View.INVISIBLE
             binding.animationView1.visibility = View.VISIBLE
         }
+
     }
 
     private fun aiRandomMove() {
         if (_binding == null) {
-            return // Fragment's view has been destroyed, so do nothing
+            return
         }
 
         val emptyCells = mutableListOf<Pair<Int, Int>>()
@@ -228,7 +252,6 @@ class RandomFragment : Fragment() {
             }
         }
 
-        // Check binding again before accessing views
         if (_binding != null) {
             if (currentPlayer == 'O') {
                 binding.animationView1.visibility = View.VISIBLE
@@ -247,31 +270,31 @@ class RandomFragment : Fragment() {
         for (i in 0..2) {
             if (board[i][0] == player && board[i][1] == player && board[i][2] == player) {
                 winningButtons.clear()
-                winningButtons.add(buttons[i][0]!!)
-                winningButtons.add(buttons[i][1]!!)
-                winningButtons.add(buttons[i][2]!!)
+                winningButtons.add(buttons[i][0])
+                winningButtons.add(buttons[i][1])
+                winningButtons.add(buttons[i][2])
                 return true
             }
             if (board[0][i] == player && board[1][i] == player && board[2][i] == player) {
                 winningButtons.clear()
-                winningButtons.add(buttons[0][i]!!)
-                winningButtons.add(buttons[1][i]!!)
-                winningButtons.add(buttons[2][i]!!)
+                winningButtons.add(buttons[0][i])
+                winningButtons.add(buttons[1][i])
+                winningButtons.add(buttons[2][i])
                 return true
             }
         }
         if (board[0][0] == player && board[1][1] == player && board[2][2] == player) {
             winningButtons.clear()
-            winningButtons.add(buttons[0][0]!!)
-            winningButtons.add(buttons[1][1]!!)
-            winningButtons.add(buttons[2][2]!!)
+            winningButtons.add(buttons[0][0])
+            winningButtons.add(buttons[1][1])
+            winningButtons.add(buttons[2][2])
             return true
         }
         if (board[0][2] == player && board[1][1] == player && board[2][0] == player) {
             winningButtons.clear()
-            winningButtons.add(buttons[0][2]!!)
-            winningButtons.add(buttons[1][1]!!)
-            winningButtons.add(buttons[2][0]!!)
+            winningButtons.add(buttons[0][2])
+            winningButtons.add(buttons[1][1])
+            winningButtons.add(buttons[2][0])
             return true
         }
         winningButtons.clear()
@@ -345,7 +368,9 @@ class RandomFragment : Fragment() {
     }
 
     private fun updateScoreDisplay() {
-        binding.scoreTable.text = "$countWinnerO:$countWinnerX"
+        binding.scoreTablePlayer1.text = "$countWinnerO"
+        binding.scoreTablePlayer2.text = "$countWinnerX"
+        Log.d("Score", "$countWinnerO $countWinnerX")
     }
 
     private fun highlightWinningLine() {
@@ -360,11 +385,9 @@ class RandomFragment : Fragment() {
         if (boolean) {
             mediaPlayer = MediaPlayer.create(binding.root.context, R.raw.audio_1)
             mediaPlayer.setVolume(0.3f, 0.3f)
-            Log.d("birinchi", "Correct answer")
         } else {
             mediaPlayer = MediaPlayer.create(binding.root.context, R.raw.audio_2)
             mediaPlayer.setVolume(0.3f, 0.3f)
-            Log.d("birinchi", "Mistake answer")
         }
 
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC)
@@ -372,16 +395,14 @@ class RandomFragment : Fragment() {
 
 
         mediaPlayer.setOnPreparedListener {
-            // Check if the Equalizer is supported on this device
             try {
                 equalizer = Equalizer(0, mediaPlayer.audioSessionId).apply {
                     enabled = true
-                    // Configure each band of the Equalizer
                     for (i in 0 until numberOfBands) {
                         setBandLevel(
                             i.toShort(),
                             1000.toShort()
-                        ) // Example: increase each band's level
+                        )
                     }
                 }
                 Log.d("Equalizer", "Equalizer successfully configured")
@@ -389,13 +410,19 @@ class RandomFragment : Fragment() {
                 Log.e("Equalizer", "Failed to initialize Equalizer: ${e.message}")
             }
         }
-
-        // Set an OnCompletionListener to release the MediaPlayer when done
         mediaPlayer.setOnCompletionListener {
             it.release()
-            Log.d("MediaPlayer", "MediaPlayer released")
         }
     }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt("countWinnerX", countWinnerX)
+        outState.putInt("countWinnerO", countWinnerO)
+        outState.putChar("currentPlayer", currentPlayer)
+        outState.putString("board", board.joinToString("") { String(it) })
+    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

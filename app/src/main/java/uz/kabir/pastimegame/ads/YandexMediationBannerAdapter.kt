@@ -1,7 +1,6 @@
 package uz.kabir.pastimegame.ads
 
 import android.content.Context
-import android.view.View
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.VersionInfo
 import com.google.android.gms.ads.mediation.Adapter
@@ -17,15 +16,14 @@ import com.yandex.mobile.ads.banner.BannerAdView
 import com.yandex.mobile.ads.common.AdRequest
 import com.yandex.mobile.ads.common.AdRequestError
 import com.yandex.mobile.ads.common.ImpressionData
-import com.yandex.mobile.ads.common.MobileAds
+import org.json.JSONObject
 
 class YandexMediationBannerAdapter : Adapter() {
 
     private var bannerView: BannerAdView? = null
 
-
     override fun getSDKVersionInfo(): VersionInfo {
-        return VersionInfo(7, 15, 2)
+        return VersionInfo(8, 1, 0)
     }
 
     override fun getVersionInfo(): VersionInfo {
@@ -37,56 +35,60 @@ class YandexMediationBannerAdapter : Adapter() {
         initializationCompleteCallback: InitializationCompleteCallback,
         mediationConfigurations: List<MediationConfiguration?>
     ) {
-        MobileAds.initialize(context) {
-            initializationCompleteCallback.onInitializationSucceeded()
-        }
+        initializationCompleteCallback.onInitializationSucceeded()
     }
 
     override fun loadBannerAd(
         adConfiguration: MediationBannerAdConfiguration,
         adLoadCallback: MediationAdLoadCallback<MediationBannerAd?, MediationBannerAdCallback?>
     ) {
-        super.loadBannerAd(adConfiguration, adLoadCallback)
-
         val context = adConfiguration.context
-        val yandexAdUnitId = adConfiguration.serverParameters.getString("parameter") ?: ""
+
+
+        val yandexAdUnitId = try {
+            JSONObject(adConfiguration.serverParameters.getString("parameter") ?: "").optString("AdUnitId")
+        } catch (e: Exception) {
+            adConfiguration.serverParameters.getString("parameter") ?: ""
+        }
 
         bannerView = BannerAdView(context).apply {
-            setAdUnitId(yandexAdUnitId)
+
             setAdSize(
-                BannerAdSize.inlineSize(
+                BannerAdSize.inline(
                     context,
                     adConfiguration.adSize.width,
                     adConfiguration.adSize.height
                 )
             )
 
-            setBannerAdEventListener(object : BannerAdEventListener {
-                override fun onAdLoaded() {
-                    val ad = object : MediationBannerAd {
-                        override fun getView(): View = this@apply
+            setBannerAdEventListener(
+                object : BannerAdEventListener {
+
+                    override fun onAdLoaded() {
+                        val mediationBannerAd = MediationBannerAd { this@apply }
+                        adLoadCallback.onSuccess(mediationBannerAd)
                     }
-                    val callback = adLoadCallback.onSuccess(ad)
-                    callback.onAdOpened() // optional
+
+                    override fun onAdFailedToLoad(error: AdRequestError) {
+
+                        adLoadCallback.onFailure(
+                            AdError(
+                                error.code,
+                                error.description,
+                                "Yandex"
+                            )
+                        )
+                    }
+
+                    override fun onAdClicked() {}
+
+                    override fun onImpression(
+                        impressionData: ImpressionData?
+                    ) {}
                 }
+            )
 
-                override fun onAdFailedToLoad(error: AdRequestError) {
-                    adLoadCallback.onFailure(
-                        AdError(error.code, error.description, "Yandex")
-                    )
-                }
-
-                override fun onAdClicked() {
-                    // Banner bosilganda callback
-                }
-
-                override fun onReturnedToApplication() {}
-                override fun onLeftApplication() {}
-                override fun onImpression(impressionData: ImpressionData?) {}
-            })
-
-            loadAd(AdRequest.Builder().build())
-
+            loadAd(AdRequest.Builder(yandexAdUnitId).build())
         }
     }
 }

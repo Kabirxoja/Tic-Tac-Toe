@@ -1,5 +1,5 @@
 <resources>
-    <string name="admob_banner_id" translatable="false">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="admob_banner_id" translatable="false">ca-app-pub-2308961496919002/5203878411</string>
 
     <string name="app_name">Tic Tac Toe</string>
     <string name="play_with_friend">Play with friend</string>

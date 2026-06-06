@@ -1,4 +1,4 @@
-package uz.kabir.pastimegame.screens
+package uz.kabir.pastimegame.ui.fragments
 
 import android.content.Context
 import android.content.res.Configuration
@@ -14,8 +14,8 @@ import androidx.core.os.LocaleListCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import uz.kabir.pastimegame.LanguageAdapter
-import uz.kabir.pastimegame.LanguageItem
+import uz.kabir.pastimegame.ui.adapter.LanguageAdapter
+import uz.kabir.pastimegame.data.model.LanguageItem
 import uz.kabir.pastimegame.databinding.FragmentBottomSheetLanguageBinding
 import java.util.Locale
 
@@ -54,21 +54,19 @@ class BottomSheetLanguage : BottomSheetDialogFragment() {
 
         val savedSelectedLanguageCode = getSavedSelectedLanguageCode(requireContext())
 
-        languageAdapter =
-            LanguageAdapter(languageDataList, savedSelectedLanguageCode) // Pass the saved code
+        languageAdapter = LanguageAdapter(languageDataList, savedSelectedLanguageCode)
         binding.recyclerView.adapter = languageAdapter
         binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 3)
 
         languageAdapter.setOnClickListener { item ->
             selectedLanguageCode = item.iconCode
             selectedLanguageCode?.let { code ->
-                saveLanguage(requireContext(), code) // Save the icon code as well
+                saveLanguage(requireContext(), code)
                 updateAppLocale(requireContext(), code)
                 requireActivity().recreate()
                 dismiss()
             } ?: run {
-                Toast.makeText(requireContext(), "Please select a language", Toast.LENGTH_SHORT)
-                    .show()
+                Toast.makeText(binding.root.context, "Please select a language", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -97,7 +95,7 @@ class BottomSheetLanguage : BottomSheetDialogFragment() {
             val config = Configuration(resources.configuration)
             config.setLocale(locale)
             config.setLayoutDirection(locale)
-            context.createConfigurationContext(config)
+            resources.updateConfiguration(config, resources.displayMetrics)
         }
     }
 

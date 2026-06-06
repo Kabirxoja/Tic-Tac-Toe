@@ -1,4 +1,4 @@
-package uz.kabir.pastimegame
+package uz.kabir.pastimegame.ui.fragments
 
 import android.graphics.drawable.Drawable
 import android.media.AudioManager
@@ -14,8 +14,9 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import uz.kabir.pastimegame.AnimationButton.animateClick
-import uz.kabir.pastimegame.MySharedPreference.getStateAudio
+import uz.kabir.pastimegame.ui.views.AnimationButton.animateClick
+import uz.kabir.pastimegame.R
+import uz.kabir.pastimegame.data.local.SoundSharedPreference
 import uz.kabir.pastimegame.databinding.FragmentTicTacToePairBinding
 import java.util.Random
 
@@ -60,9 +61,7 @@ class PairFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentTicTacToePairBinding.inflate(inflater, container, false)
-
-        audioOn = getStateAudio(requireContext())
-
+        audioOn = SoundSharedPreference.getStateAudio(requireContext())
         return binding.root
     }
 
@@ -70,8 +69,47 @@ class PairFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         loadUserData()
         initializeUI()
+        savedInstanceState?.let {
+
+            currentPlayer = it.getChar("currentPlayer")
+            countWinnerX = it.getInt("countWinnerX")
+            countWinnerO = it.getInt("countWinnerO")
+            gameActive = it.getBoolean("gameActive")
+
+            val boardString = it.getString("gameState") ?: "         "
+
+            for (i in 0..2) {
+                for (j in 0..2) {
+                    gameState[i][j] = boardString[i * 3 + j]
+                }
+            }
+
+            restoreGameUI()
+        }
         setupButtonClickListeners()
         updateTurnIndicator()
+    }
+
+    private fun restoreGameUI() {
+
+        for (i in 0..2) {
+            for (j in 0..2) {
+
+                when (gameState[i][j]) {
+                    'X' -> buttons[i][j].setImageDrawable(xDrawable)
+                    'O' -> buttons[i][j].setImageDrawable(oDrawable)
+                }
+            }
+        }
+
+        binding.scoreTablePlayer1.text = "$countWinnerO"
+        binding.scoreTablePlayer2.text = "$countWinnerX"
+
+        updateTurnIndicator()
+
+        if (!gameActive) {
+            disableButtons()
+        }
     }
 
     private fun loadUserData() {
@@ -124,8 +162,10 @@ class PairFragment : Fragment() {
     }
 
     private fun updateTurnIndicator() {
-        binding.animationView1.visibility = if (currentPlayer == 'O') View.VISIBLE else View.INVISIBLE
-        binding.animationView2.visibility = if (currentPlayer == 'X') View.VISIBLE else View.INVISIBLE
+        binding.animationView1.visibility =
+            if (currentPlayer == 'O') View.VISIBLE else View.INVISIBLE
+        binding.animationView2.visibility =
+            if (currentPlayer == 'X') View.VISIBLE else View.INVISIBLE
         statusText.text = getString(if (currentPlayer == 'X') R.string.x_turn else R.string.o_turn)
     }
 
@@ -135,9 +175,12 @@ class PairFragment : Fragment() {
         gameState[row][col] = currentPlayer
         buttons[row][col].setImageDrawable(if (currentPlayer == 'X') xDrawable else oDrawable)
 
-        //Audio
-        if (currentPlayer == 'O') { if (audioOn) setAudioFile(true) }
-        if (currentPlayer == 'X') { if (audioOn) setAudioFile(false) }
+        if (currentPlayer == 'O') {
+            if (audioOn) setAudioFile(true)
+        }
+        if (currentPlayer == 'X') {
+            if (audioOn) setAudioFile(false)
+        }
 
         if (checkForWin()) {
             handleWin()
@@ -159,7 +202,9 @@ class PairFragment : Fragment() {
             countWinnerO++
             binding.indicatorUser1.setImageResource(R.drawable.ic_winner)
         }
-        binding.scoreTable.text = "$countWinnerO : $countWinnerX"
+        binding.scoreTablePlayer1.text = "$countWinnerO"
+        binding.scoreTablePlayer2.text = "$countWinnerX"
+
         highlightWinningLine()
         disableButtons()
     }
@@ -271,11 +316,9 @@ class PairFragment : Fragment() {
         if (boolean) {
             mediaPlayer = MediaPlayer.create(binding.root.context, R.raw.audio_1)
             mediaPlayer.setVolume(0.3f, 0.3f)
-            Log.d("birinchi", "Correct answer")
         } else {
             mediaPlayer = MediaPlayer.create(binding.root.context, R.raw.audio_2)
             mediaPlayer.setVolume(0.3f, 0.3f)
-            Log.d("birinchi", "Mistake answer")
         }
 
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC)
@@ -283,16 +326,14 @@ class PairFragment : Fragment() {
 
 
         mediaPlayer.setOnPreparedListener {
-            // Check if the Equalizer is supported on this device
             try {
                 equalizer = Equalizer(0, mediaPlayer.audioSessionId).apply {
                     enabled = true
-                    // Configure each band of the Equalizer
                     for (i in 0 until numberOfBands) {
                         setBandLevel(
                             i.toShort(),
                             1000.toShort()
-                        ) // Example: increase each band's level
+                        )
                     }
                 }
                 Log.d("Equalizer", "Equalizer successfully configured")
@@ -300,14 +341,25 @@ class PairFragment : Fragment() {
                 Log.e("Equalizer", "Failed to initialize Equalizer: ${e.message}")
             }
         }
-
-        // Set an OnCompletionListener to release the MediaPlayer when done
         mediaPlayer.setOnCompletionListener {
             it.release()
             Log.d("MediaPlayer", "MediaPlayer released")
         }
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        outState.putChar("currentPlayer", currentPlayer)
+        outState.putInt("countWinnerX", countWinnerX)
+        outState.putInt("countWinnerO", countWinnerO)
+        outState.putBoolean("gameActive", gameActive)
+
+        outState.putString(
+            "gameState",
+            gameState.joinToString("") { String(it) }
+        )
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()

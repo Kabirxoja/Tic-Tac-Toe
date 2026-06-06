@@ -10,7 +10,7 @@
     android:gravity="center"
     android:orientation="vertical"
     android:padding="16dp"
-    tools:context=".RandomFragment">
+    tools:context=".ui.fragments.RandomFragment">
 
 
 
@@ -110,18 +110,48 @@
 
         </RelativeLayout>
 
-        <TextView
-            android:id="@+id/score_table"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="12dp"
-            android:text="0:0"
-            android:textColor="@color/white"
-            android:textSize="52sp"
-            android:textStyle="bold"
+            android:gravity="center_horizontal"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            />
+            >
+            <TextView
+                android:id="@+id/score_table_player1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textColor="@color/white"
+                android:textSize="46sp"
+                android:textStyle="bold"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="12dp"
+                android:text=":"
+                android:textColor="@color/white"
+                android:textSize="46sp"
+                android:textStyle="bold"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                />
+            <TextView
+                android:id="@+id/score_table_player2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textColor="@color/white"
+                android:textSize="46sp"
+                android:textStyle="bold"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                />
+        </LinearLayout>
+
 
         <RelativeLayout
             android:id="@+id/right_side"

@@ -1,4 +1,4 @@
-package uz.kabir.pastimegame
+package uz.kabir.pastimegame.ui.fragments
 
 import android.media.AudioManager
 import android.media.MediaPlayer
@@ -11,8 +11,9 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import uz.kabir.pastimegame.AnimationButton.animateClick
-import uz.kabir.pastimegame.MySharedPreference.getStateAudio
+import uz.kabir.pastimegame.ui.views.AnimationButton.animateClick
+import uz.kabir.pastimegame.R
+import uz.kabir.pastimegame.data.local.SoundSharedPreference
 import uz.kabir.pastimegame.databinding.FragmentBlotBinding
 import kotlin.random.Random
 
@@ -47,15 +48,14 @@ class InfiniteFragment : Fragment() {
     private lateinit var equalizer: Equalizer
     private var audioOn = false
 
+    private var restoredStatusText = ""
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentBlotBinding.inflate(inflater, container, false)
-
-        audioOn = getStateAudio(requireContext())
-
-
+        audioOn = SoundSharedPreference.getStateAudio(requireContext())
         return binding.root
     }
 
@@ -63,7 +63,50 @@ class InfiniteFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initViews()
         initGame()
-        resetBoard()
+
+        if (savedInstanceState == null) {
+            resetBoard()
+        }
+
+        savedInstanceState?.let {
+            currentPlayer = it.getInt("currentPlayer")
+            player1Score = it.getInt("player1Score")
+            player2Score = it.getInt("player2Score")
+
+            restoredStatusText = it.getString("statusText", "")
+
+            player1Moves.clear()
+            player2Moves.clear()
+
+            it.getString("player1Moves", "")
+                .split(";")
+                .filter { item -> item.isNotEmpty() }
+                .forEach { item ->
+                    val (r, c) = item.split(",")
+                    player1Moves.add(
+                        Pair(
+                            r.toInt(),
+                            c.toInt()
+                        )
+                    )
+                }
+
+            it.getString("player2Moves", "")
+                .split(";")
+                .filter { item -> item.isNotEmpty() }
+                .forEach { item ->
+
+                    val (r, c) = item.split(",")
+                    player2Moves.add(
+                        Pair(
+                            r.toInt(),
+                            c.toInt()
+                        )
+                    )
+                }
+
+            restoreGameUI()
+        }
 
         arguments?.let {
             user1ImageIndex = it.getInt("user1ImageIndex")
@@ -75,6 +118,38 @@ class InfiniteFragment : Fragment() {
         binding.txtUserNameO.text = user2Name
         binding.imgUserX.setBackgroundResource(userImages[user1ImageIndex])
         binding.imgUserO.setBackgroundResource(userImages[user2ImageIndex])
+    }
+
+    private fun restoreGameUI() {
+        updateScore()
+
+        binding.statusText.text = restoredStatusText
+
+        player1Moves.forEachIndexed { index, move ->
+            buttons[move.first][move.second].setImageResource(
+                if (index == 0 && player1Moves.size == 3)
+                    R.drawable.faded_o
+                else
+                    R.drawable.ic_main_o
+            )
+        }
+
+        player2Moves.forEachIndexed { index, move ->
+            buttons[move.first][move.second].setImageResource(
+                if (index == 0 && player2Moves.size == 3)
+                    R.drawable.faded_x
+                else
+                    R.drawable.ic_main_x
+            )
+        }
+
+        if (currentPlayer == 1) {
+            binding.animationView1.visibility = View.VISIBLE
+            binding.animationView2.visibility = View.INVISIBLE
+        } else {
+            binding.animationView2.visibility = View.VISIBLE
+            binding.animationView1.visibility = View.INVISIBLE
+        }
     }
 
     private fun initViews() {
@@ -137,7 +212,7 @@ class InfiniteFragment : Fragment() {
     private fun onButtonClick(row: Int, col: Int) {
         for (i in 0 until 3) {
             for (j in 0 until 3) {
-                buttons[i][j]?.backgroundTintList =
+                buttons[i][j].backgroundTintList =
                     ContextCompat.getColorStateList(binding.root.context, R.color.defaultBackground)
             }
         }
@@ -215,19 +290,16 @@ class InfiniteFragment : Fragment() {
 
     private fun checkWin(moves: List<Pair<Int, Int>>): List<Pair<Int, Int>>? {
         if (moves.size < 3) return null
-
         // Check rows
         for (i in 0 until 3) {
             val rowMoves = moves.filter { it.first == i }
             if (rowMoves.size >= 3) return rowMoves
         }
-
         // Check columns
         for (i in 0 until 3) {
             val colMoves = moves.filter { it.second == i }
             if (colMoves.size >= 3) return colMoves
         }
-
         // Check diagonals
         val diag1 = listOf(Pair(0, 0), Pair(1, 1), Pair(2, 2))
         val diag2 = listOf(Pair(0, 2), Pair(1, 1), Pair(2, 0))
@@ -273,18 +345,18 @@ class InfiniteFragment : Fragment() {
     }
 
     private fun updateScore() {
-        binding.scoreTable.text = "$player1Score:$player2Score"
+        binding.scoreTablePlayer1.text = "$player1Score"
+        binding.scoreTablePlayer2.text = "$player2Score"
+
     }
 
     private fun setAudioFile(boolean: Boolean) {
         if (boolean) {
             mediaPlayer = MediaPlayer.create(binding.root.context, R.raw.audio_1)
             mediaPlayer.setVolume(0.3f, 0.3f)
-            Log.d("birinchi", "Correct answer")
         } else {
             mediaPlayer = MediaPlayer.create(binding.root.context, R.raw.audio_2)
             mediaPlayer.setVolume(0.3f, 0.3f)
-            Log.d("birinchi", "Mistake answer")
         }
 
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC)
@@ -292,16 +364,14 @@ class InfiniteFragment : Fragment() {
 
 
         mediaPlayer.setOnPreparedListener {
-            // Check if the Equalizer is supported on this device
             try {
                 equalizer = Equalizer(0, mediaPlayer.audioSessionId).apply {
                     enabled = true
-                    // Configure each band of the Equalizer
                     for (i in 0 until numberOfBands) {
                         setBandLevel(
                             i.toShort(),
                             1000.toShort()
-                        ) // Example: increase each band's level
+                        )
                     }
                 }
                 Log.d("Equalizer", "Equalizer successfully configured")
@@ -309,12 +379,20 @@ class InfiniteFragment : Fragment() {
                 Log.e("Equalizer", "Failed to initialize Equalizer: ${e.message}")
             }
         }
-
-        // Set an OnCompletionListener to release the MediaPlayer when done
         mediaPlayer.setOnCompletionListener {
             it.release()
             Log.d("MediaPlayer", "MediaPlayer released")
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt("currentPlayer", currentPlayer)
+        outState.putInt("player1Score", player1Score)
+        outState.putInt("player2Score", player2Score)
+        outState.putString("statusText", binding.statusText.text.toString())
+        outState.putString("player1Moves", player1Moves.joinToString(";") { "${it.first},${it.second}" })
+        outState.putString("player2Moves", player2Moves.joinToString(";") { "${it.first},${it.second}" })
     }
 
     override fun onDestroyView() {

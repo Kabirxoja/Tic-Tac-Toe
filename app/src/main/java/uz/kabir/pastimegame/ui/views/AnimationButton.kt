@@ -1,4 +1,4 @@
-package uz.kabir.pastimegame
+package uz.kabir.pastimegame.ui.views
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator

@@ -1,4 +1,4 @@
-package uz.kabir.pastimegame.screens
+package uz.kabir.pastimegame.ui.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import uz.kabir.pastimegame.AnimationButton.animateClick
+import uz.kabir.pastimegame.ui.views.AnimationButton.animateClick
 import uz.kabir.pastimegame.R
 import uz.kabir.pastimegame.databinding.FragmentBottomSheetOnePlayerBinding
 
@@ -31,7 +31,7 @@ class BottomSheetOnePlayer : BottomSheetDialogFragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentBottomSheetOnePlayerBinding.inflate(inflater, container, false)
         return binding.root
     }

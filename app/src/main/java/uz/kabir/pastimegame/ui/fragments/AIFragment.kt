@@ -1,7 +1,5 @@
-package uz.kabir.pastimegame
+package uz.kabir.pastimegame.ui.fragments
 
-import android.content.res.ColorStateList
-import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.media.AudioManager
 import android.media.MediaPlayer
@@ -9,19 +7,20 @@ import android.media.audiofx.Equalizer
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.ContextCompat
-import uz.kabir.pastimegame.AnimationButton.animateClick
-import uz.kabir.pastimegame.MySharedPreference.getStateAudio
+import androidx.fragment.app.Fragment
+import uz.kabir.pastimegame.ui.views.AnimationButton.animateClick
+import uz.kabir.pastimegame.R
+import uz.kabir.pastimegame.data.local.SoundSharedPreference
 import uz.kabir.pastimegame.databinding.FragmentTicTacToeAIBinding
-
+import java.util.Random
 
 class AIFragment : Fragment() {
 
@@ -56,11 +55,13 @@ class AIFragment : Fragment() {
     private lateinit var equalizer: Equalizer
     private var audioOn = false
 
+    private val handler = Handler(Looper.getMainLooper())
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentTicTacToeAIBinding.inflate(inflater, container, false)
         val root = binding.root
 
@@ -69,7 +70,7 @@ class AIFragment : Fragment() {
             user1Name = it.getString("user1Name")
         }
 
-        audioOn = getStateAudio(requireContext())
+        audioOn = SoundSharedPreference.getStateAudio(requireContext())
 
         return root
     }
@@ -108,7 +109,31 @@ class AIFragment : Fragment() {
         xDrawable = ContextCompat.getDrawable(binding.root.context, R.drawable.ic_main_x)!!
         oDrawable = ContextCompat.getDrawable(binding.root.context, R.drawable.ic_main_o)!!
 
+        savedInstanceState?.let { bundle ->
+            countWinnerX = bundle.getInt("countWinnerX")
+            countWinnerO = bundle.getInt("countWinnerO")
+            isXTurn = bundle.getBoolean("isXTurn")
+            val boardString = bundle.getString("board") ?: "         "
+            for (i in 0..2) {
+                for (j in 0..2) {
+                    board[i][j] = boardString[i * 3 + j]
+                }
+            }
+            restoreBoardUI()
+        }
 
+    }
+
+    private fun restoreBoardUI() {
+        for (i in 0..2) {
+            for (j in 0..2) {
+                when (board[i][j]) {
+                    'X' -> buttons[i][j].setImageDrawable(xDrawable)
+                    'O' -> buttons[i][j].setImageDrawable(oDrawable)
+                }
+            }
+        }
+        updateScoreDisplay()
     }
 
     private fun makeMove(row: Int, col: Int) {
@@ -140,13 +165,16 @@ class AIFragment : Fragment() {
         updateScoreDisplay()
 
         // Delay AI move to simulate thinking
-        Handler(Looper.getMainLooper()).postDelayed({
+        handler.postDelayed({
+            if (_binding == null) return@postDelayed
             aiMove()
         }, 1000)
     }
 
-
     private fun aiMove() {
+        if (_binding == null) return
+        if (!isAdded) return
+
         val bestMove = minimaxMove()
         board[bestMove.first][bestMove.second] = 'O'
         buttons[bestMove.first][bestMove.second].setImageDrawable(oDrawable)
@@ -280,9 +308,9 @@ class AIFragment : Fragment() {
 
         for (i in 0..2) {
             for (j in 0..2) {
-                buttons[i][j]?.backgroundTintList =
+                buttons[i][j].backgroundTintList =
                     ContextCompat.getColorStateList(binding.root.context, R.color.defaultBackground)
-                buttons[i][j]?.isEnabled = true
+                buttons[i][j].isEnabled = true
             }
         }
 
@@ -290,18 +318,18 @@ class AIFragment : Fragment() {
     }
 
     private fun updateScoreDisplay() {
-        binding.scoreTable.text = "$countWinnerO:$countWinnerX"
+        binding.scoreTablePlayer1.text = "$countWinnerO"
+        binding.scoreTablePlayer2.text = "$countWinnerX"
+
     }
 
     private fun setAudioFile(boolean: Boolean) {
         if (boolean) {
             mediaPlayer = MediaPlayer.create(binding.root.context, R.raw.audio_1)
             mediaPlayer.setVolume(0.3f, 0.3f)
-            Log.d("birinchi", "Correct answer")
         } else {
             mediaPlayer = MediaPlayer.create(binding.root.context, R.raw.audio_2)
             mediaPlayer.setVolume(0.3f, 0.3f)
-            Log.d("birinchi", "Mistake answer")
         }
 
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC)
@@ -309,33 +337,42 @@ class AIFragment : Fragment() {
 
 
         mediaPlayer.setOnPreparedListener {
-            // Check if the Equalizer is supported on this device
             try {
                 equalizer = Equalizer(0, mediaPlayer.audioSessionId).apply {
                     enabled = true
-                    // Configure each band of the Equalizer
                     for (i in 0 until numberOfBands) {
                         setBandLevel(
                             i.toShort(),
                             1000.toShort()
-                        ) // Example: increase each band's level
+                        )
                     }
                 }
-                Log.d("Equalizer", "Equalizer successfully configured")
             } catch (e: Exception) {
-                Log.e("Equalizer", "Failed to initialize Equalizer: ${e.message}")
+                Toast.makeText(binding.root.context, e.toString(), Toast.LENGTH_SHORT).show()
             }
         }
 
-        // Set an OnCompletionListener to release the MediaPlayer when done
         mediaPlayer.setOnCompletionListener {
             it.release()
-            Log.d("MediaPlayer", "MediaPlayer released")
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        outState.putInt("countWinnerX", countWinnerX)
+        outState.putInt("countWinnerO", countWinnerO)
+        outState.putBoolean("isXTurn", isXTurn)
+
+        outState.putString(
+            "board",
+            board.joinToString("") { String(it) }
+        )
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
+        handler.removeCallbacksAndMessages(null)
         _binding = null
     }
 }

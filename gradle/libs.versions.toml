@@ -1,5 +1,5 @@
 [versions]
-agp = "8.10.1"
+agp = "8.9.0"
 kotlin = "1.9.0"
 coreKtx = "1.15.0"
 junit = "4.13.2"
@@ -14,9 +14,10 @@ versionLottie = "6.1.0"
 preferenceKtx = "1.2.1"
 inAppUpdate = "2.1.0"
 
-yandexAds = "7.15.2"
-yandexAdsAdmob = "7.15.2.0"
-admobAds = "23.1.0"
+yandexAds = "8.1.0"
+yandexAdsAdmob = "8.1.0.0"
+appmetrica = "8.2.0"
+admobAds = "23.6.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -28,17 +29,16 @@ material = { group = "com.google.android.material", name = "material", version.r
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 androidx-navigation-fragment = { group = "androidx.navigation", name = "navigation-fragment", version.ref = "navigationFragment" }
-animation = {group="com.airbnb.android", name="lottie", version.ref="versionLottie"}
+lottie-animation = {group="com.airbnb.android", name="lottie", version.ref="versionLottie"}
 androidx-preference-ktx = { group = "androidx.preference", name = "preference-ktx", version.ref = "preferenceKtx" }
 app-update = {group="com.google.android.play", name = "app-update", version.ref = "inAppUpdate"}
 app-update-ktx = {group="com.google.android.play", name = "app-update-ktx", version.ref = "inAppUpdate"}
 
 yandex-mobileads = {group="com.yandex.android", name = "mobileads", version.ref = "yandexAds"}
 yandex-admob-mobileads = {group = "com.yandex.ads.adapter", name="admob-mobileads", version.ref = "yandexAdsAdmob"}
+appmetrica-analytics = { group = "io.appmetrica.analytics", name = "analytics", version.ref = "appmetrica" }
 admob-ads = {group="com.google.android.gms", name = "play-services-ads", version.ref = "admobAds"}
-
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-

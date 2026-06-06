@@ -1,4 +1,4 @@
-package uz.kabir.pastimegame
+package uz.kabir.pastimegame.ui.activity
 
 import android.content.Context
 import android.content.res.Configuration
@@ -9,6 +9,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.preference.PreferenceManager
 import com.google.android.play.core.appupdate.AppUpdateInfo
 import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
@@ -21,10 +22,8 @@ import java.util.Locale
 class MainActivity : AppCompatActivity() {
 
     private val PREF_LANGUAGE_KEY = "app_language"
-
     private lateinit var appUpdateManager: AppUpdateManager
     private lateinit var activityResultLauncher: ActivityResultLauncher<IntentSenderRequest>
-
 
     private lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -91,7 +90,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun getSavedLanguage(context: Context): String? {
         val sharedPreferences =
-            androidx.preference.PreferenceManager.getDefaultSharedPreferences(context)
+            PreferenceManager.getDefaultSharedPreferences(context)
         return sharedPreferences.getString(PREF_LANGUAGE_KEY, null)
     }
 
@@ -100,15 +99,11 @@ class MainActivity : AppCompatActivity() {
         Locale.setDefault(locale)
         val resources = context.resources
         val config = Configuration(resources.configuration)
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            config.setLocale(locale)
-            config.setLayoutDirection(locale)
-            return context.createConfigurationContext(config)
-        } else {
-            config.locale = locale
-            config.setLayoutDirection(locale)
-            resources.updateConfiguration(config, resources.displayMetrics)
-            return context
-        }
+        config.setLocale(locale)
+        config.setLayoutDirection(locale)
+        // Forcefully update resources to switch languages instantly on Android 7, 8, 9
+        resources.updateConfiguration(config, resources.displayMetrics)
+        // Return a secure context for newer systems (Android 10+)
+        return context.createConfigurationContext(config)
     }
 }

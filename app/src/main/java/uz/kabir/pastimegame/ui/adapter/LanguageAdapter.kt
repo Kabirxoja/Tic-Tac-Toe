@@ -1,20 +1,18 @@
-package uz.kabir.pastimegame
+package uz.kabir.pastimegame.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.GridLayout
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import uz.kabir.pastimegame.AnimationButton.animateClick
-import uz.kabir.pastimegame.databinding.RecycleItemLayoutBinding
-
+import uz.kabir.pastimegame.ui.views.AnimationButton.animateClick
+import uz.kabir.pastimegame.data.model.LanguageItem
+import uz.kabir.pastimegame.R
 
 class LanguageAdapter(
     private val languageList: List<LanguageItem>,
-    initiallySelectedIconCode: String? = null // Receive the saved code
+    initiallySelectedIconCode: String? = null
 ) : RecyclerView.Adapter<LanguageAdapter.LanguageViewHolder>() {
 
     private var onItemClickListener: ((LanguageItem) -> Unit)? = null

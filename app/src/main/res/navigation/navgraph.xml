@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/mainFragment"
-        android:name="uz.kabir.pastimegame.screens.MainFragment"
+        android:name="uz.kabir.pastimegame.ui.fragments.MainFragment"
         android:label="fragment_main"
         tools:layout="@layout/fragment_main" >
         <action
@@ -25,22 +25,22 @@
     </fragment>
     <fragment
         android:id="@+id/ticTacToePairFragment"
-        android:name="uz.kabir.pastimegame.PairFragment"
+        android:name="uz.kabir.pastimegame.ui.fragments.PairFragment"
         android:label="fragment_tic_tac_toe_pair"
         tools:layout="@layout/fragment_tic_tac_toe_pair" />
     <fragment
         android:id="@+id/ticTacToeAIFragment"
-        android:name="uz.kabir.pastimegame.AIFragment"
+        android:name="uz.kabir.pastimegame.ui.fragments.AIFragment"
         android:label="fragment_tic_tac_toe_a_i"
         tools:layout="@layout/fragment_tic_tac_toe_a_i" />
     <fragment
         android:id="@+id/ticTacToeRandomFragment"
-        android:name="uz.kabir.pastimegame.RandomFragment"
+        android:name="uz.kabir.pastimegame.ui.fragments.RandomFragment"
         android:label="fragment_tic_tac_toe_random"
         tools:layout="@layout/fragment_tic_tac_toe_random" />
     <fragment
         android:id="@+id/boltFragment"
-        android:name="uz.kabir.pastimegame.InfiniteFragment"
+        android:name="uz.kabir.pastimegame.ui.fragments.InfiniteFragment"
         android:label="fragment_blot"
         tools:layout="@layout/fragment_blot" />
 </navigation>

@@ -1,4 +1,4 @@
-package uz.kabir.pastimegame.screens
+package uz.kabir.pastimegame.ui.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import uz.kabir.pastimegame.AnimationButton.animateClick
+import uz.kabir.pastimegame.ui.views.AnimationButton.animateClick
 import uz.kabir.pastimegame.R
 import uz.kabir.pastimegame.databinding.FragmentBottomSheetBinding
 
@@ -32,7 +32,7 @@ class BottomSheetTwoPlayer(private var selected: String) : BottomSheetDialogFrag
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentBottomSheetBinding.inflate(inflater, container, false)
         if (selected == "bolt") {
             binding.root.setBackgroundResource(R.drawable.ic_background_main_4)

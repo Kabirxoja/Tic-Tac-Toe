@@ -1,4 +1,4 @@
-package uz.kabir.pastimegame
+package uz.kabir.pastimegame.data.model
 
 data class LanguageItem(
     val iconCode: String,
